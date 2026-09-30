@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "엑스벤처 | EXVENTURE",
-  description: "엑스벤처의 회사·사업 소개와 소식, 도구와 서비스 안내",
+  description: "기업 진단과 소비자 반응조사를 바탕으로 우선순위와 분기별 실행 계획을 연결합니다.",
   robots: { index: false, follow: false },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     {children}
     <footer className="site-footer">
       <Link className="site-brand" href="/" aria-label="엑스벤처 홈페이지"><Brand /></Link>
-      <p>기업의 다음 단계를 함께.</p><span>공식 홈페이지 준비 중</span>
+      <p>질문에서 근거로, 근거에서 실행으로.</p><span>공식 홈페이지 준비 중</span>
     </footer>
   </body></html>;
 }
