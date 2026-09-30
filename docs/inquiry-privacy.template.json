@@ -1,0 +1,9 @@
+{
+  "version": "",
+  "controllerLegalName": "",
+  "privacyContactRole": "",
+  "processors": [
+    { "name": "", "purpose": "", "dataItems": "", "countries": [], "retention": "" }
+  ],
+  "internationalTransfer": { "status": "pending", "approvedNotice": "" }
+}

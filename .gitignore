@@ -4,8 +4,12 @@ node_modules/
 .local/
 .env*
 !.env.example
+!.env.local-integration.example
 *.tsbuildinfo
 next-env.d.ts
+.playwright-cli/
+output/playwright/
+supabase/.temp/
 엑스벤처 홈페이지 기획.txt
 docs/홈페이지-인프라-구상안.md
 docs/엑스벤처-리네이밍-결과.md
