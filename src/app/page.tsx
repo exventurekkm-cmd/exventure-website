@@ -61,7 +61,7 @@ export default function Home() {
 
       <section className="home-connect" aria-labelledby="connect-title">
         <div><p className="editorial-label">03 / CONNECT</p><h2 id="connect-title">다음 질문을<br />함께 정리합니다.</h2><Link className="editorial-link" href="/contact">문의 안내 <span aria-hidden="true">↗</span></Link></div>
-        <div className="work-entry"><p className="row-label">EXVENTURE WORKSPACE</p><h3>진행 중인 업무가 있나요?</h3><p>회사 계정에 연결된 서비스에서<br />기업 진단과 조사 업무를 이어가세요.</p><a className="editorial-link" href={accountUrl}>로그인 · 내 서비스 <span aria-hidden="true">↗</span></a></div>
+        <div className="work-entry"><p className="row-label">EXVENTURE WORKSPACE</p><h3>진행 중인 업무가 있나요?</h3><p>회사 계정으로 로그인하고<br />워크스페이스에서 업무를 이어가세요.</p><a className="editorial-link" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a></div>
       </section>
     </main>
   );

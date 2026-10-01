@@ -22,7 +22,7 @@ export function SiteHeader() {
       </button>
       <nav id="site-navigation" aria-label="주 메뉴">
         {navigation.map(item => <Link key={item.href} href={item.href} aria-current={pathname === item.href ? "page" : undefined} onClick={() => setOpen(false)}>{item.label}</Link>)}
-        <a className="account-link" href={accountUrl}>로그인 · 내 서비스 <span aria-hidden="true">↗</span></a>
+        <a className="account-link" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
   );
