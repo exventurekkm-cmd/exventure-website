@@ -2,9 +2,10 @@ import Link from "next/link";
 import { accountUrl } from "@/lib/site";
 
 const services = [
-  { number: "01", title: "기업 진단", question: "지금, 무엇부터 풀어야 할까요?", output: "현재 상황과 핵심 과제의 정리", href: "/business", link: "사업 영역" },
-  { number: "02", title: "소비자 반응조사", question: "우리의 가정은 고객에게도 맞을까요?", output: "소비자 반응과 판단의 근거", href: "/tools", link: "업무 도구" },
-  { number: "03", title: "분기 로드맵", question: "다음 분기에는 무엇에 집중할까요?", output: "우선순위와 분기별 실행 계획", href: "/tools", link: "업무 도구" },
+  { number: "01", title: "창업 교육·멘토링", question: "사업의 시작에 무엇이 필요할까요?", output: "창업 역량과 비즈니스 모델의 구체화", href: "/business", link: "사업 영역" },
+  { number: "02", title: "사업화·시장 검증", question: "아이디어가 시장에서도 통할까요?", output: "MVP 제작 지원과 시장 반응의 확인", href: "/business", link: "사업 영역" },
+  { number: "03", title: "IR·성장 지원", question: "기업의 가능성을 어떻게 설명할까요?", output: "IR 준비와 데모데이·피칭", href: "/business", link: "사업 영역" },
+  { number: "04", title: "글로벌 진출", question: "다음 시장에는 어떻게 다가갈까요?", output: "해외 진출 전략과 네트워크 연결", href: "/business", link: "사업 영역" },
 ];
 
 const process = [
@@ -19,11 +20,11 @@ export default function Home() {
     <main id="main" tabIndex={-1} className="home-page">
       <section className="home-opening" aria-labelledby="opening-title">
         <div className="opening-copy">
-          <p className="editorial-label">EXVENTURE · RESEARCH &amp; STRATEGY</p>
-          <h1 id="opening-title">기업의 질문을,<br />실행의 순서로.</h1>
-          <p className="opening-lead">기업의 현재를 진단하고, 소비자의 반응으로 가정을 검증합니다. 그 근거를 다음 분기의 우선순위와 실행 계획으로 이어갑니다.</p>
+          <p className="editorial-label">EXVENTURE · INVESTMENT &amp; CONSULTING</p>
+          <h1 id="opening-title">창업의 가능성을,<br />다음 성장으로.</h1>
+          <p className="opening-lead">창업 교육과 맞춤형 컨설팅, 시장 검증과 IR 준비를 연결합니다. 초기 기업의 실행 계획을 함께 세우고, 글로벌 시장으로 나아갈 기반을 만듭니다.</p>
           <Link className="editorial-link" href="#services">우리가 하는 일 <span aria-hidden="true">↓</span></Link>
-          <p className="opening-index"><span>기업 진단</span><span aria-hidden="true">→</span><span>반응 검증</span><span aria-hidden="true">→</span><span>분기 로드맵</span></p>
+          <p className="opening-index"><span>역량 강화</span><span aria-hidden="true">→</span><span>사업화·검증</span><span aria-hidden="true">→</span><span>시장 확장</span></p>
         </div>
         <aside className="roadmap-specimen" aria-label="분기 로드맵의 구성 예시">
           <div className="specimen-top"><span>WORKING DOCUMENT</span><span className="specimen-example">구성 예시</span></div>
