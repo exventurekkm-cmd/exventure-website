@@ -20,12 +20,16 @@ export default function Home() {
     <main id="main" tabIndex={-1} className="home-page">
       <section className="home-opening" aria-labelledby="opening-title">
         <div className="opening-copy">
-          <p className="editorial-label">EXVENTURE · INVESTMENT &amp; CONSULTING</p>
+          <p className="editorial-label">EXVENTURE / INDUSTRIAL VENTURE STUDIO</p>
           <h1 id="opening-title">창업의 가능성을,<br />다음 성장으로.</h1>
           <p className="opening-lead">창업 교육과 맞춤형 컨설팅, 시장 검증과 IR 준비를 연결합니다. 초기 기업의 실행 계획을 함께 세우고, 글로벌 시장으로 나아갈 기반을 만듭니다.</p>
           <Link className="editorial-link" href="#services">우리가 하는 일 <span aria-hidden="true">↓</span></Link>
           <p className="opening-index"><span>역량 강화</span><span aria-hidden="true">→</span><span>사업화·검증</span><span aria-hidden="true">→</span><span>시장 확장</span></p>
         </div>
+        <div className="opening-industrial" role="img" aria-label="산업과 기술의 연결을 표현한 콘셉트 이미지"><span>TECHNOLOGY<br />PEOPLE<br />MARKETS<br /><b>A BETTER TOMORROW</b></span></div>
+      </section>
+      <section className="home-working" aria-labelledby="working-title">
+        <div><p className="editorial-label">FROM QUESTIONS TO ACTION</p><h2 id="working-title">가능성을 찾고,<br />실행으로 연결합니다.</h2><p>기업의 현황과 시장의 반응을 함께 살펴보고, 다음 단계에 필요한 계획을 정리합니다.</p></div>
         <aside className="roadmap-specimen" aria-label="분기 로드맵의 구성 예시">
           <div className="specimen-top"><span>WORKING DOCUMENT</span><span className="specimen-example">구성 예시</span></div>
           <p className="specimen-caption">질문에서 계획까지</p>

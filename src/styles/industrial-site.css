@@ -1,0 +1,84 @@
+/* Approved industrial composition. All decorative artwork is conceptual. */
+@media screen {
+  body { padding-left: 224px; background: #fff; }
+  .site-header { position: fixed; inset: 0 auto 0 0; z-index: 50; width: 224px; height: 100dvh; margin: 0; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 26px 0 18px; gap: 30px; border: 0; color: #d4d9dd; background: #11171c; overflow-y: auto; }
+  .site-header .site-brand { padding-inline: 22px; }
+  .site-header .exv-logo { width: 180px; }
+  .site-header nav { display: grid; gap: 4px; width: 100%; }
+  .site-header nav > a { display: flex; gap: 18px; min-height: 48px; padding: 11px 24px; border-left: 3px solid transparent; font-size: 14px; }
+  .site-header nav > a:hover { color: #fff; background: #ffffff08; text-decoration: none; }
+  .site-header nav > a[aria-current] { color: #ff914e; border-left-color: var(--exv-orange); background: #f5671810; text-decoration: none; }
+  .site-header .account-link { margin: 12px 20px 0; padding: 10px 4px; border-left: 0; border-top: 1px solid #39424b; justify-content: space-between; }
+  .site-menu-toggle { color: #fff; }
+  .site-manifesto { margin-top: auto; padding: 70px 28px 30px; min-height: 260px; background: linear-gradient(0deg, #11171c 2%, #11171c66 80%), url('/brand/exventure-industrial-v1.png') 15% center / auto 100%; }
+  .site-manifesto > span { font-size: 19px; letter-spacing: .12em; line-height: 1.5; color: #fff; }
+  .site-manifesto i { display: block; width: 36px; height: 3px; margin-top: 22px; background: var(--exv-orange); }
+  .site-rail-footer { padding: 0 28px; margin: 0; font-size: 13px; letter-spacing: .1em; color: #c5cbd0; }
+  .site-rail-footer small { font-size: 11px; letter-spacing: 0; color: #a7b0b8; }
+  .site-topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 88px; padding: 0 42px; border-bottom: 1px solid var(--exv-line); background: linear-gradient(110deg, #f4f5f6 58%, #e8eaec 58%, #e8eaec 66%, #fff 66%); }
+  .site-topbar > span { font-size: 11px; letter-spacing: .25em; color: #515a62; }
+  .site-topbar i { font-style: normal; margin-inline: 14px; color: #949ca3; }
+  .site-topbar a { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; font-size: 13px; text-decoration: none; }
+  .site-topbar a > span { color: var(--exv-brand); }
+  .home-page { padding-inline: 42px; }
+  .home-opening { position: relative; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 4%; min-height: 550px; padding: 76px 0 60px; align-items: center; }
+  .opening-copy { position: relative; z-index: 1; }
+  .opening-copy h1 { font-size: clamp(40px, 4.4vw, 66px); letter-spacing: -.065em; margin-top: 28px; }
+  .opening-lead { font-size: 16px; max-width: 480px; }
+  .opening-index { margin-top: 40px; }
+  .opening-industrial { align-self: stretch; min-height: 370px; margin-right: -42px; position: relative; background: linear-gradient(0deg, #11171c99, #11171c00 70%), url('/brand/exventure-industrial-v1.png') 80% center / cover; clip-path: polygon(16% 0, 100% 0, 100% 100%, 0 100%); }
+  .opening-industrial > span { position: absolute; right: 30px; bottom: 30px; text-align: right; color: #fff; font-size: 11px; line-height: 2.2; letter-spacing: .18em; }
+  .opening-industrial b { display: block; font-weight: 500; padding-top: 5px; }
+  .home-working { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 8%; padding: 36px 0 68px; border-top: 1px solid var(--exv-line); align-items: start; }
+  .home-working h2 { font-size: 34px; margin-top: 30px; }
+  .home-working > div > p:last-child { max-width: 430px; font-size: 16px; color: var(--exv-muted); line-height: 1.9; }
+  .roadmap-specimen { margin-top: 0; border: 1px solid var(--exv-line); border-top: 3px solid var(--exv-orange); border-radius: 8px; box-shadow: 0 10px 30px #17212a05; }
+  .home-services, .home-method, .home-connect { border-color: var(--exv-line); }
+  .service-row h3 { font-size: 20px; }
+  .site-footer { padding-inline: 42px; background: #f5f6f7; }
+  .section-page { margin-left: 0; max-width: 1100px; padding-inline: 42px; }
+  @media (max-width: 1100px) {
+    .site-topbar { padding-inline: 28px; }
+    .site-topbar i { margin-inline: 8px; }
+    .home-page { padding-inline: 28px; }
+    .opening-industrial { margin-right: -28px; }
+    .service-row { grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr); }
+    .service-question { grid-column: 2; }
+    .service-output { grid-column: 3; grid-row: 1 / 3; }
+    .service-link { grid-column: 2; }
+  }
+  @media (max-width: 960px) {
+    body { padding-left: 0; }
+    .site-header { position: relative; width: 100%; height: auto; padding: 18px 24px; flex-flow: row wrap; align-items: center; gap: 12px; overflow: visible; }
+    .site-header .site-brand { padding: 0; }
+    .site-menu-toggle { display: inline-flex; color: #fff; }
+    .site-header nav { display: none; order: 3; border-color: #39424b; }
+    .site-header[data-open='true'] nav { display: grid; }
+    .site-header nav > a { padding: 10px 12px; }
+    .site-header .account-link { margin: 8px 12px 0; }
+    .site-manifesto, .site-rail-footer { display: none; }
+    .site-topbar { height: 64px; padding-inline: 24px; }
+    .home-opening { min-height: 0; padding-block: 42px; }
+  }
+  @media (max-width: 640px) {
+    .site-header { padding: 16px 20px; }
+    .site-topbar { padding: 0 20px; }
+    .site-topbar > span { font-size: 10px; letter-spacing: .08em; }
+    .site-topbar i { margin-inline: 4px; }
+    .site-topbar > a { font-size: 12px; gap: 8px; }
+    .home-page { padding-inline: 20px; }
+    .home-opening { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+    .opening-copy h1 { font-size: 40px; }
+    .opening-industrial { min-height: 230px; margin-right: -20px; }
+    .home-working { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 32px 44px; }
+    .home-working h2 { font-size: 28px; }
+    .service-row { grid-template-columns: 28px minmax(0, 1fr); }
+    .service-question, .service-output, .service-link { grid-column: 2; grid-row: auto; }
+    .section-page, .site-footer { padding-inline: 20px; }
+  }
+  @media (forced-colors: active) {
+    .site-header { background: Canvas; color: CanvasText; }
+    .site-header nav > a[aria-current] { color: LinkText; border-color: LinkText; }
+    .site-menu-toggle { color: ButtonText; }
+  }
+}
