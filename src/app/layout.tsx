@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "엑스벤처 | EXVENTURE",
-  description: "기업 진단과 소비자 반응조사를 바탕으로 우선순위와 분기별 실행 계획을 연결합니다.",
+  description: "창업 교육과 컨설팅, 시장 검증과 IR 준비, 글로벌 진출 지원으로 초기 기업의 성장을 함께하는 엑스벤처입니다.",
   robots: { index: false, follow: false },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {

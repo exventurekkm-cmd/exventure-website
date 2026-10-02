@@ -42,10 +42,12 @@
   h1 { font-size: clamp(28px, 3vw, 40px); line-height: 1.35; letter-spacing: -.05em; }
   h2 { font-size: 21px; line-height: 1.45; letter-spacing: -.035em; }
   h3 { font-size: 17px; line-height: 1.5; }
-  .exv-brand { display: inline-flex; align-items: center; gap: 12px; color: inherit; white-space: nowrap; }
-  .exv-symbol { width: 32px; height: 32px; flex: none; color: var(--exv-orange); }
-  .exv-wordmark { font-family: Arial, var(--exv-font); font-size: 20px; font-weight: 800; letter-spacing: .015em; line-height: 1.1; }
-  .exv-wordmark small { display: block; margin-top: 6px; font-family: var(--exv-font); font-size: 12px; font-weight: 500; letter-spacing: .025em; color: inherit; }
+  .exv-brand { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 7px; color: inherit; }
+  .exv-logo { display: block; width: 210px; max-width: 100%; height: auto; }
+  .exv-logo-reversed { display: none; }
+  .exv-brand-label { font-family: var(--exv-font); font-size: 12px; font-weight: 500; line-height: 1.5; letter-spacing: .025em; color: inherit; }
+  .exv-brand[data-tone="dark"] .exv-logo-default { display: none; }
+  .exv-brand[data-tone="dark"] .exv-logo-reversed { display: block; }
   .exv-kicker, .eyebrow, .platform-eyebrow { color: var(--exv-brand); font-size: 12px; font-weight: 700; letter-spacing: .12em; line-height: 1.6; }
   .muted, .helper { color: var(--exv-muted); }
   .skip-link, .platform-skip { position: fixed; top: 12px; left: 16px; z-index: 1000; transform: translateY(-180%); padding: 12px 20px; background: #fff; color: var(--exv-forest); border: 2px solid var(--exv-brand); border-radius: 3px; font-size: 15px; font-weight: 700; }
@@ -283,8 +285,7 @@
     [data-exv-ui="roadmap"] .main-content { padding: 28px 24px 0; width: 100%; margin: 0; }
   }
   @media (max-width: 640px) {
-    .exv-wordmark { font-size: 18px; }
-    .exv-symbol { width: 30px; height: 30px; }
+    .exv-logo { width: 190px; }
     .identity-main { width: calc(100% - 32px); padding-top: 32px; }
     .identity-header { padding-inline: 16px; }
     .identity-header nav { gap: 4px 16px; }
@@ -309,7 +310,16 @@
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
   @media (forced-colors: active) {
+    .exv-brand { forced-color-adjust: none; background: #fff; color: #000; padding: 6px; }
+    .exv-brand[data-tone] .exv-logo-default { display: block; }
+    .exv-brand[data-tone] .exv-logo-reversed { display: none; }
     :where(a, button, input, select, textarea, summary):focus-visible { outline: 3px solid Highlight; }
     .button, .nav-item.active, [aria-current="page"], .identity-tabs button.active { border: 1px solid ButtonText; }
   }
+}
+
+@media print {
+  .exv-brand { display: inline-flex; flex-direction: column; gap: 6px; }
+  .exv-logo { width: 210px; height: auto; }
+  .exv-logo-reversed { display: none; }
 }

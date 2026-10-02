@@ -1,18 +1,13 @@
-/** EXVENTURE identity v1. Keep this component identical in the three apps. */
-export function BrandSymbol({ className = "" }: { className?: string }) {
-  return (
-    <svg className={`exv-symbol ${className}`} viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">
-      <path d="M4 4h13l27 40H31L4 4Z" fill="currentColor" />
-      <path d="M31 4h13L29 23l-7-10L31 4ZM19 25l7 10-9 9H4l15-19Z" fill="currentColor" />
-    </svg>
-  );
-}
+import Image from "next/image";
 
-export function Brand({ label = "엑스벤처" }: { label?: string }) {
+/** Supplied official artwork. Keep this component identical in the three apps. */
+
+export function Brand({ label = "엑스벤처", tone = "light" }: { label?: string; tone?: "light" | "dark" }) {
   return (
-    <span className="exv-brand">
-      <BrandSymbol />
-      <span className="exv-wordmark">EXVENTURE<small>{label}</small></span>
+    <span className="exv-brand" data-tone={tone}>
+      <Image className="exv-logo exv-logo-default" src="/brand/exventure-logo.png" width={1558} height={280} alt="Exventure Inc. · 엑스벤처" loading="eager" unoptimized />
+      <Image className="exv-logo exv-logo-reversed" src="/brand/exventure-logo-white.png" width={1558} height={280} alt="Exventure Inc. · 엑스벤처" loading="eager" unoptimized />
+      {label !== "엑스벤처" && <small className="exv-brand-label">{label}</small>}
     </span>
   );
 }
