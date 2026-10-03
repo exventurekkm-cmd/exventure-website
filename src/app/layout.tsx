@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/exventure.css";
 import "./globals.css";
 import "@/styles/industrial-site.css";
+import "@/styles/history-directory.css";
 import Link from "next/link";
 import { Brand } from "@/components/brand";
 import { SiteHeader } from "@/components/site-header";

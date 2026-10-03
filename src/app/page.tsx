@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { accountUrl } from "@/lib/site";
+import { companyHistory, companyProfile } from "@/lib/company-profile";
 
 const services = [
   { number: "01", title: "창업 교육·멘토링", question: "사업의 시작에 무엇이 필요할까요?", output: "창업 역량과 비즈니스 모델의 구체화", href: "/business", link: "사업 영역" },
@@ -64,8 +65,9 @@ export default function Home() {
         </ol>
       </section>
 
+      <section className="home-history" aria-labelledby="home-history-title"><div className="section-heading"><p className="editorial-label">03 / SELECTED HISTORY</p><div><h2 id="home-history-title">함께해 온 과정.</h2><p className="company-source">{companyProfile.sourceLabel} · 주요 이력</p></div></div><ol>{companyHistory.filter(item => item.organization).slice(0, 3).map(item => <li key={item.date + item.title}><time dateTime={item.date.replace(".", "-")}>{item.date}</time><div><h3>{item.title}</h3><p>{item.organization}</p></div><Link className="editorial-link" href={`/about#company-history`}>이력 보기 <span aria-hidden="true">↗</span><span className="sr-only"> · {item.title}</span></Link></li>)}</ol><Link className="editorial-link" href="/about#company-history">연도·기관별 이력 찾기 <span aria-hidden="true">↗</span></Link></section>
       <section className="home-connect" aria-labelledby="connect-title">
-        <div><p className="editorial-label">03 / CONNECT</p><h2 id="connect-title">다음 질문을<br />함께 정리합니다.</h2><Link className="editorial-link" href="/contact">문의 안내 <span aria-hidden="true">↗</span></Link></div>
+        <div><p className="editorial-label">04 / CONNECT</p><h2 id="connect-title">다음 질문을<br />함께 정리합니다.</h2><Link className="editorial-link" href="/contact">문의 안내 <span aria-hidden="true">↗</span></Link></div>
         <div className="work-entry"><p className="row-label">EXVENTURE WORKSPACE</p><h3>진행 중인 업무가 있나요?</h3><p>회사 계정으로 로그인하고<br />워크스페이스에서 업무를 이어가세요.</p><a className="editorial-link" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a></div>
       </section>
     </main>
