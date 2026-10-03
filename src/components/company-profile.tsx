@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { companyHistory, companyProfile, companyPrograms } from "@/lib/company-profile";
+import { companyProfile, companyPrograms } from "@/lib/company-profile";
+import { CompanyHistoryDirectory } from "./company-history-directory";
 
 export function CompanyOverview() {
   return <div className="company-content">
@@ -20,7 +21,7 @@ export function CompanyOverview() {
     </section>
     <section className="company-section" aria-labelledby="company-history">
       <div><p className="editorial-label">03 / SELECTED HISTORY</p><h2 id="company-history">함께해 온 과정</h2><p className="company-source">회사소개서에 수록된 주요 이력입니다.</p></div>
-      <ol className="company-history">{companyHistory.map(item => <li key={item.date + item.title}><time dateTime={item.date.replace(".", "-")}>{item.date}</time><div><h3>{item.title}</h3>{item.organization && <p>{item.organization}</p>}</div></li>)}</ol>
+      <CompanyHistoryDirectory/>
     </section>
     <div className="company-next"><p>기업의 현재와 다음 단계를 함께 이야기합니다.</p><Link className="editorial-link" href="/contact">협업 문의 <span aria-hidden="true">↗</span></Link></div>
   </div>;
