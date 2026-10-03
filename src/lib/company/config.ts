@@ -1,5 +1,5 @@
 import { readInquiryBackend, reservedSupabaseRefs } from "../inquiries/backend-settings.ts";
-import { companyIssuer, companyPortal, uuidPattern } from "./contract.ts";
+import { companyIssuer, companyPortal, legacyCompanyPortal, uuidPattern } from "./contract.ts";
 import { localIntegration } from "../local-integration.ts";
 export type CompanyConfig = { origin: string; issuer: string; portal: string; clientId: string; key: string; approvedAccountId: string; localIntegration?: true };
 /** No default client, key, account grant, or HTTP authentication fallback. */
@@ -16,7 +16,7 @@ export function readCompanyConfig(env: Record<string, string | undefined>): Comp
   if (!ref || !/^[a-z]{20}$/.test(ref) || reservedSupabaseRefs.has(ref)) return null;
   try {
     const portal = new URL(env.WEBSITE_COMPANY_TEST_PORTAL_ORIGIN ?? "");
-    if (portal.protocol !== "https:" || portal.username || portal.password || portal.port || portal.search || portal.hash || portal.pathname !== "/" || portal.origin === companyPortal) return null;
+    if (portal.protocol !== "https:" || portal.username || portal.password || portal.port || portal.search || portal.hash || portal.pathname !== "/" || [companyPortal, legacyCompanyPortal].includes(portal.origin)) return null;
     return { origin: backend.origin, issuer: `https://${ref}.supabase.co/auth/v1`, portal: portal.origin, clientId, key, approvedAccountId };
   } catch { return null; }
 }

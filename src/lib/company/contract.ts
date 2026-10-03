@@ -1,6 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 export const companyIssuer = "https://gszfrbzvketspsipcitj.supabase.co/auth/v1";
-export const companyPortal = "https://exventure-accounts.vercel.app";
+export const companyPortal = "https://accounts.exventure.co.kr";
+export const legacyCompanyPortal = "https://exventure-accounts.vercel.app";
 export const websiteApplication = "exventure-website";
 export const loginCookie = "website-company-login";
 export const sessionCookie = "website-company-session";

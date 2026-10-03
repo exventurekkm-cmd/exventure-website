@@ -2,13 +2,13 @@
 export function staffReturnPath(value: unknown): string {
   if (typeof value !== "string" || value.length > 2000 || /[%\\\x00-\x20#]/.test(value)) return "/";
   if (!/^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|research$)/.test(value)) return "/";
-  const url = new URL(value, "https://exventure-workspace.vercel.app");
+  const url = new URL(value, "https://workspace.exventure.co.kr");
   if (!/^\/(?:$|roadmap(?:\/|$)|workspace(?:\/|$)|research$)/.test(url.pathname) || /\/(?:auth|login|oauth|accounts|account)(?:\/|$)/.test(url.pathname)) return "/";
   if ([...url.searchParams.keys()].some(key => /token|code|state|redirect|next|return/i.test(key))) return "/";
   return url.pathname + url.search;
 }
 export function staffLoginUrl(next: unknown, local = false): URL {
-  const url = new URL("/auth/staff/start", local ? "http://127.0.0.1:3000" : "https://exventure-workspace.vercel.app");
+  const url = new URL("/auth/staff/start", local ? "http://127.0.0.1:3000" : "https://workspace.exventure.co.kr");
   url.searchParams.set("next", staffReturnPath(next));
   return url;
 }

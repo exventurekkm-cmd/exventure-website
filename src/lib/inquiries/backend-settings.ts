@@ -19,7 +19,7 @@ export function readInquiryBackend(env: Record<string, string | undefined>): Inq
   const ref = projectRef(env.WEBSITE_INQUIRY_DB_URL);
   if (!ref) return null;
   if (env.VERCEL_ENV === "production") {
-    if (env.WEBSITE_INQUIRY_DB_ENVIRONMENT !== "production" || ref !== productionWebsiteRef || origin.origin !== "https://exventure-website.vercel.app") return null;
+    if (env.WEBSITE_INQUIRY_DB_ENVIRONMENT !== "production" || ref !== productionWebsiteRef || !["https://exventure.co.kr", "https://exventure-website.vercel.app"].includes(origin.origin)) return null;
   } else {
     if (env.WEBSITE_INQUIRY_DB_ENVIRONMENT !== "test" || reservedSupabaseRefs.has(ref) || ref !== env.WEBSITE_INQUIRY_TEST_PROJECT_REF) return null;
     const publicRef = projectRef(env.NEXT_PUBLIC_SUPABASE_URL);
