@@ -1,5 +1,6 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Brand } from "@/components/brand";
@@ -9,17 +10,24 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
+  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 961px)");
+    const close = () => setOpen(false);
+    desktop.addEventListener("change", close);
+    return () => desktop.removeEventListener("change", close);
+  }, []);
   return (
     <>
-    <header className="site-header" data-open={open} onKeyDown={(event) => {
+    <header className="site-header" data-open={open} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }} onKeyDown={(event) => {
       if (event.key === "Escape" && open) {
         setOpen(false);
         toggle.current?.focus();
       }
     }}>
       <Link className="site-brand" href="/" aria-label="엑스벤처 홈페이지" onClick={() => setOpen(false)}><Brand tone="dark" /></Link>
-      <button ref={toggle} className="site-menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>
-        {open ? "메뉴 닫기" : "메뉴 열기"}<span aria-hidden="true">{open ? "−" : "+"}</span>
+      <button ref={toggle} className="site-menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(value => !value)}>
+        {open ? "메뉴 닫기" : "메뉴 열기"}<span className="menu-glyph" aria-hidden="true"><i /><i /></span>
       </button>
       <nav id="site-navigation" aria-label="주 메뉴">
         {[{ href: "/", label: "홈" }, ...navigation].map((item, index) => <Link key={item.href} href={item.href} aria-current={pathname === item.href ? "page" : undefined} onClick={() => setOpen(false)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d={[
@@ -32,10 +40,17 @@ export function SiteHeader() {
         ][index]} /></svg>{item.label}</Link>)}
         <a className="account-link" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a>
       </nav>
-      <div className="site-manifesto"><span>REAL<br />INDUSTRY<br />BIGGER<br />TOMORROW</span><i aria-hidden="true" /></div>
-      <p className="site-rail-footer">EXVENTURE<br /><small>Industrial Venture Studio</small></p>
+      <div className="site-manifesto"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="266px" /><span>REAL<br />INDUSTRY<br />BIGGER<br />TOMORROW</span><i aria-hidden="true" /></div>
+      <div className="site-rail-footer"><Brand tone="dark" /><small>© EXVENTURE</small></div>
     </header>
-    <div className="site-topbar"><span>BUILD <i>×</i> INVEST <i>×</i> SCALE <i>×</i> GLOBAL</span><a href={accountUrl}>업무 공간 <span aria-hidden="true">↗</span></a></div>
+    <div className="site-topbar"><span className="topbar-motto">BUILD <i>×</i> CONNECT <i>×</i> SCALE <i>×</i> GLOBAL</span><div className="topbar-industrial" aria-hidden="true"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="(max-width: 640px) 120px, 360px" /></div><span className="topbar-caption">창업 교육 · 컨설팅 · 성장 지원</span></div>
     </>
   );
+}
+
+export function SkipLink() {
+  return <a className="skip-link" href="#main" onClick={event => {
+    const main = document.getElementById("main");
+    if (main) { event.preventDefault(); main.focus(); }
+  }}>본문으로 이동</a>;
 }
