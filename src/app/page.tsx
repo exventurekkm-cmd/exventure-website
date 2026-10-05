@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { accountUrl } from "@/lib/site";
+import { HomeMotion } from "@/components/home-motion";
 import { companyHistory, companyProfile } from "@/lib/company-profile";
 
 const services = [
@@ -19,34 +20,20 @@ const process = [
 export default function Home() {
   return (
     <main id="main" tabIndex={-1} className="home-page">
+      <HomeMotion />
       <section className="home-opening" aria-labelledby="opening-title">
         <div className="opening-copy">
           <p className="editorial-label">EXVENTURE / INDUSTRIAL VENTURE STUDIO</p>
           <h1 id="opening-title">창업의 가능성을,<br />다음 성장으로.</h1>
           <p className="opening-lead">창업 교육과 맞춤형 컨설팅, 시장 검증과 IR 준비를 연결합니다. 초기 기업의 실행 계획을 함께 세우고, 글로벌 시장으로 나아갈 기반을 만듭니다.</p>
-          <Link className="editorial-link" href="#services">우리가 하는 일 <span aria-hidden="true">↓</span></Link>
+          <div className="opening-actions"><Link className="button primary" href="#programs">함께한 프로그램 <span aria-hidden="true">↓</span></Link><Link className="editorial-link" href="#services">사업 영역 보기 <span aria-hidden="true">↗</span></Link></div>
           <p className="opening-index"><span>역량 강화</span><span aria-hidden="true">→</span><span>사업화·검증</span><span aria-hidden="true">→</span><span>시장 확장</span></p>
         </div>
-        <div className="opening-industrial" role="img" aria-label="산업과 기술의 연결을 표현한 콘셉트 이미지"><span>TECHNOLOGY<br />PEOPLE<br />MARKETS<br /><b>A BETTER TOMORROW</b></span></div>
+        <div className="opening-industrial"><Image src="/brand/exventure-industrial-v1.png" alt="산업과 기술의 연결을 표현한 콘셉트 이미지" fill sizes="(max-width: 640px) 100vw, 42vw" priority /><span aria-hidden="true">TECHNOLOGY<br />PEOPLE<br />MARKETS<br /><b>A BETTER TOMORROW</b></span></div>
       </section>
-      <section className="home-working" aria-labelledby="working-title">
-        <div><p className="editorial-label">FROM QUESTIONS TO ACTION</p><h2 id="working-title">가능성을 찾고,<br />실행으로 연결합니다.</h2><p>기업의 현황과 시장의 반응을 함께 살펴보고, 다음 단계에 필요한 계획을 정리합니다.</p></div>
-        <aside className="roadmap-specimen" aria-label="분기 로드맵의 구성 예시">
-          <div className="specimen-top"><span>WORKING DOCUMENT</span><span className="specimen-example">구성 예시</span></div>
-          <p className="specimen-caption">질문에서 계획까지</p>
-          <h2>다음 분기의<br />판단을 위한 노트.</h2>
-          <dl className="specimen-lines">
-            <div><dt><span>01</span> 질문</dt><dd>무엇을 먼저 확인할 것인가</dd></div>
-            <div><dt><span>02</span> 근거</dt><dd>현황과 소비자 반응을 함께 보기</dd></div>
-            <div><dt><span>03</span> 선택</dt><dd>집중할 과제와 그 이유 정리하기</dd></div>
-            <div><dt><span>04</span> 실행</dt><dd>분기별 계획으로 옮기기</dd></div>
-          </dl>
-          <p className="specimen-note">산출물의 구성을 설명하는 예시입니다.<br />실제 고객 자료나 성과를 나타내지 않습니다.</p>
-        </aside>
-      </section>
-
-      <section id="services" className="home-services" aria-labelledby="services-title">
-        <div className="section-heading"><p className="editorial-label">01 / WHAT WE DO</p><h2 id="services-title">질문에 맞는 접근,<br className="mobile-break" /> 결정에 필요한 결과물.</h2></div>
+      <section id="programs" className="home-history" data-reveal aria-labelledby="home-history-title"><div className="section-heading"><p className="editorial-label">01 / WITH EXVENTURE</p><div><h2 id="home-history-title">함께해 온 프로그램.</h2><p className="company-source">{companyProfile.sourceLabel} · 주요 이력</p></div></div><ol>{companyHistory.filter(item => item.organization).slice(0, 3).map(item => <li key={item.date + item.title}><time dateTime={item.date.replace(".", "-")}>{item.date}</time><div><h3>{item.title}</h3><p>{item.organization}</p></div><Link className="editorial-link" href={`/about#company-history`}>이력 보기 <span aria-hidden="true">↗</span><span className="sr-only"> · {item.title}</span></Link></li>)}</ol><Link className="editorial-link" href="/about#company-history">연도·기관별 이력 찾기 <span aria-hidden="true">↗</span></Link></section>
+      <section id="services" className="home-services" data-reveal aria-labelledby="services-title">
+        <div className="section-heading"><p className="editorial-label">02 / WHAT WE DO</p><h2 id="services-title">질문에 맞는 접근,<br className="mobile-break" /> 결정에 필요한 결과물.</h2></div>
         <div className="service-index">
           {services.map(service => <div className="service-row" key={service.number}>
             <span className="service-number">{service.number}</span>
@@ -58,17 +45,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-method" aria-labelledby="method-title">
-        <div className="section-heading"><p className="editorial-label">02 / HOW WE WORK</p><h2 id="method-title">하나의 질문이<br />실행 계획이 되기까지.</h2></div>
+      <section className="home-method" data-reveal aria-labelledby="method-title">
+        <div className="section-heading"><p className="editorial-label">03 / HOW WE WORK</p><h2 id="method-title">하나의 질문이<br />실행 계획이 되기까지.</h2></div>
         <ol className="method-sequence">
           {process.map((step, index) => <li key={step.title}><span className="method-number">0{index + 1}</span><h3>{step.title}</h3><p>{step.description}</p></li>)}
         </ol>
       </section>
 
-      <section className="home-history" aria-labelledby="home-history-title"><div className="section-heading"><p className="editorial-label">03 / SELECTED HISTORY</p><div><h2 id="home-history-title">함께해 온 과정.</h2><p className="company-source">{companyProfile.sourceLabel} · 주요 이력</p></div></div><ol>{companyHistory.filter(item => item.organization).slice(0, 3).map(item => <li key={item.date + item.title}><time dateTime={item.date.replace(".", "-")}>{item.date}</time><div><h3>{item.title}</h3><p>{item.organization}</p></div><Link className="editorial-link" href={`/about#company-history`}>이력 보기 <span aria-hidden="true">↗</span><span className="sr-only"> · {item.title}</span></Link></li>)}</ol><Link className="editorial-link" href="/about#company-history">연도·기관별 이력 찾기 <span aria-hidden="true">↗</span></Link></section>
-      <section className="home-connect" aria-labelledby="connect-title">
+      <section className="home-connect" data-reveal aria-labelledby="connect-title">
         <div><p className="editorial-label">04 / CONNECT</p><h2 id="connect-title">다음 질문을<br />함께 정리합니다.</h2><Link className="editorial-link" href="/contact">문의 안내 <span aria-hidden="true">↗</span></Link></div>
-        <div className="work-entry"><p className="row-label">EXVENTURE WORKSPACE</p><h3>진행 중인 업무가 있나요?</h3><p>회사 계정으로 로그인하고<br />워크스페이스에서 업무를 이어가세요.</p><a className="editorial-link" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a></div>
+        <address className="home-contact"><p>주식회사 엑스벤처</p><a href={`mailto:${companyProfile.email}`}>{companyProfile.email}<span aria-hidden="true">↗</span></a><a href={companyProfile.telephoneHref}>{companyProfile.telephone}</a><p>{companyProfile.address}</p><small>{companyProfile.sourceLabel}</small></address>
       </section>
     </main>
   );

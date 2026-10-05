@@ -3,9 +3,10 @@ import "@/styles/exventure.css";
 import "./globals.css";
 import "@/styles/industrial-site.css";
 import "@/styles/history-directory.css";
+import "@/styles/reference-site.css";
 import Link from "next/link";
 import { Brand } from "@/components/brand";
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader, SkipLink } from "@/components/site-header";
 
 export const metadata: Metadata = {
   title: "엑스벤처 | EXVENTURE",
@@ -13,13 +14,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="ko"><body>
-    <a className="skip-link" href="#main">본문으로 이동</a>
+  return <html lang="ko"><body className="reference-site">
+    <SkipLink />
     <SiteHeader />
+    <div className="reference-shell">
     {children}
     <footer className="site-footer">
       <Link className="site-brand" href="/" aria-label="엑스벤처 홈페이지"><Brand /></Link>
-      <p>질문에서 근거로, 근거에서 실행으로.</p><span>공식 홈페이지 준비 중</span>
+      <p>질문에서 근거로, 근거에서 실행으로.</p><Link href="/privacy">개인정보 안내</Link>
     </footer>
+    </div>
   </body></html>;
 }
