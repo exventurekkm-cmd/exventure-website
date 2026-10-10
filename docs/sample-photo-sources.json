@@ -1,0 +1,119 @@
+{
+  "licenseURL": "https://unsplash.com/license",
+  "photos": [
+    {
+      "key": "mentoring",
+      "id": "rtD_lcsN6_U",
+      "author": "Lyubomyr Reverchuk",
+      "source": "https://unsplash.com/photos/a-group-of-people-sitting-around-a-table-with-laptops-rtD_lcsN6_U",
+      "type": "meeting / consultation",
+      "imageCDN": "https://images.unsplash.com/photo-1690378820474-b468b8ee64d3",
+      "sourceResolution": "Free-license label and image CDN link inspected on official Unsplash photo page using web tool",
+      "license": "Unsplash License",
+      "licenseURL": "https://unsplash.com/license",
+      "licenseCheckedOn": "2026-10-09",
+      "sample": true,
+      "companyActivityEvidence": false,
+      "downloads": [
+        {
+          "file": "mentoring-1800.webp",
+          "requestURL": "https://images.unsplash.com/photo-1690378820474-b468b8ee64d3?fm=webp&w=1800&fit=max&q=82",
+          "bytes": 270068,
+          "dimensions": [
+            1800,
+            1200
+          ],
+          "format": "WEBP",
+          "sha256": "1fe687c1a63babac00d0a6752010bd2b3dadf0433681cc3bce4c92b9843837af"
+        },
+        {
+          "file": "mentoring-900.webp",
+          "requestURL": "https://images.unsplash.com/photo-1690378820474-b468b8ee64d3?fm=webp&w=900&fit=max&q=82",
+          "bytes": 83846,
+          "dimensions": [
+            900,
+            600
+          ],
+          "format": "WEBP",
+          "sha256": "a0b60751e20f84dfdbbfdd0fe420d50f0f3e5f35a8df20eb74a4b4c57e6b8bce"
+        }
+      ]
+    },
+    {
+      "key": "presentation",
+      "id": "YrJ99TBRQvI",
+      "author": "Product School",
+      "source": "https://unsplash.com/photos/people-listening-to-a-person-in-a-stage-YrJ99TBRQvI",
+      "type": "presentation / audience",
+      "imageCDN": "https://images.unsplash.com/photo-1560523159-fbe43c0b465f",
+      "sourceResolution": "Free-license label and image CDN link inspected on official Unsplash photo page using web tool",
+      "license": "Unsplash License",
+      "licenseURL": "https://unsplash.com/license",
+      "licenseCheckedOn": "2026-10-09",
+      "sample": true,
+      "companyActivityEvidence": false,
+      "downloads": [
+        {
+          "file": "presentation-1400.webp",
+          "requestURL": "https://images.unsplash.com/photo-1560523159-fbe43c0b465f?fm=webp&w=1400&fit=max&q=82",
+          "bytes": 112380,
+          "dimensions": [
+            1400,
+            933
+          ],
+          "format": "WEBP",
+          "sha256": "d271c73327a44080efe7e85030115a8474d6c36ae075d53e115cf1fa464a6dde"
+        },
+        {
+          "file": "presentation-700.webp",
+          "requestURL": "https://images.unsplash.com/photo-1560523159-fbe43c0b465f?fm=webp&w=700&fit=max&q=82",
+          "bytes": 44536,
+          "dimensions": [
+            700,
+            467
+          ],
+          "format": "WEBP",
+          "sha256": "1c0bc6d1d3c7726677c9eba18ab9cadfb9ff251e10f5af5d0e6abd3b54a0e55d"
+        }
+      ]
+    },
+    {
+      "key": "teamwork",
+      "id": "mlwrIzr7yNs",
+      "author": "Creatopy",
+      "source": "https://unsplash.com/photos/two-women-sitting-at-a-table-with-a-laptop-mlwrIzr7yNs",
+      "type": "collaborative team work",
+      "imageCDN": "https://images.unsplash.com/photo-1704440349159-e7f8a6db589f",
+      "sourceResolution": "Free-license label and image CDN link inspected on official Unsplash photo page using web tool",
+      "license": "Unsplash License",
+      "licenseURL": "https://unsplash.com/license",
+      "licenseCheckedOn": "2026-10-09",
+      "sample": true,
+      "companyActivityEvidence": false,
+      "downloads": [
+        {
+          "file": "teamwork-1400.webp",
+          "requestURL": "https://images.unsplash.com/photo-1704440349159-e7f8a6db589f?fm=webp&w=1400&fit=max&q=82",
+          "bytes": 170994,
+          "dimensions": [
+            1400,
+            933
+          ],
+          "format": "WEBP",
+          "sha256": "0097baf34a9f54a6933f154b79dd931965674126e083516f7cc3f5cdcc35a10f"
+        },
+        {
+          "file": "teamwork-700.webp",
+          "requestURL": "https://images.unsplash.com/photo-1704440349159-e7f8a6db589f?fm=webp&w=700&fit=max&q=82",
+          "bytes": 57760,
+          "dimensions": [
+            700,
+            467
+          ],
+          "format": "WEBP",
+          "sha256": "a55ae6a632c26ca27d115dc0a3f7498f0a81c0c77815cf7358411e4bbba32b94"
+        }
+      ]
+    }
+  ]
+}
