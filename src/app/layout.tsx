@@ -4,9 +4,11 @@ import "./globals.css";
 import "@/styles/industrial-site.css";
 import "@/styles/history-directory.css";
 import "@/styles/reference-site.css";
-import Link from "next/link";
-import { Brand } from "@/components/brand";
+import "@/styles/public-frame.css";
+import "@/styles/editorial-fonts.css";
+import "@/styles/editorial-site.css";
 import { SiteHeader, SkipLink } from "@/components/site-header";
+import { ContentDirectory, CompanyContext } from "@/components/public-frame";
 
 export const metadata: Metadata = {
   title: "엑스벤처 | EXVENTURE",
@@ -14,14 +16,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="ko"><body className="reference-site">
+  return <html lang="ko"><body className="public-frame-site editorial-site">
     <SkipLink />
     <SiteHeader />
     <div className="reference-shell">
-    {children}
+    <div className="public-frame-grid"><ContentDirectory /><div className="frame-content">{children}</div><CompanyContext /></div>
     <footer className="site-footer">
-      <Link className="site-brand" href="/" aria-label="엑스벤처 홈페이지"><Brand /></Link>
-      <p>질문에서 근거로, 근거에서 실행으로.</p><Link href="/privacy">개인정보 안내</Link>
+      <p>© 주식회사 엑스벤처</p><a href="/privacy">개인정보 안내</a>
     </footer>
     </div>
   </body></html>;
