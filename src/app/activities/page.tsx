@@ -12,9 +12,9 @@ export default function ActivitiesPage() {
     <ol id="activity-list" className="activity-list">{publicActivities.map(activity => <li key={activity.slug} id={activityRowId(activity.slug)} tabIndex={-1}>
       <Link className="activity-list-row" href={"/activities/"+activity.slug} aria-label={activity.title+" 상세 보기"}>
         <span className="activity-record-date" aria-hidden="true"><span>{activity.date.slice(0,4)}</span><strong>{activity.date.slice(5)}</strong></span>
-        <div><p className="activity-category">{activity.category}</p><h2>{activity.title}</h2><p className="ed-meta"><time dateTime={activity.date.replace(".","-")}>{activity.date}</time><span>{activity.organization}</span></p><span className="activity-list-action">활동 기록 보기 <span aria-hidden="true">↗</span></span></div>
+        <div><p className="activity-category">{activity.category}</p><h2>{activity.title}</h2><p className="ed-meta"><time dateTime={activity.date.replace(".","-")}>{activity.date}</time><span>{activity.organization}</span></p><span className="activity-list-action">활동 기록 보기 </span></div>
       </Link>
     </li>)}</ol>
-    <div className="activity-list-footer"><Link className="ed-text-link" href="/about#company-history">회사 전체 이력 <span aria-hidden="true">↗</span></Link><Link className="ed-text-link" href="/business">지원 프로그램 <span aria-hidden="true">↗</span></Link></div>
+    <div className="activity-list-footer"><Link className="ed-text-link" href="/about#company-history">회사 전체 이력 </Link><Link className="ed-text-link" href="/business">지원 프로그램 </Link></div>
   </main>;
 }

@@ -22,7 +22,7 @@ export function CompanyContext() {
             <time dateTime={record.date.replace(".","-")}>{record.date}</time><p>{record.title}</p>
           </Link>
         </li>;})}</ol>
-        <Link className="ed-text-link" href="/about#company-history">전체 이력 <span aria-hidden="true">↗</span></Link>
+        <Link className="ed-text-link" href="/about#company-history">전체 이력 </Link>
       </section>
       <section className="context-company"><h2>{companyProfile.name}</h2>
         <p>창업 교육과 컨설팅,<br />사업화·시장 검증·해외 진출 준비를 함께합니다.</p>

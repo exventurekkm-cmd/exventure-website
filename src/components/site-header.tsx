@@ -56,7 +56,7 @@ export function SiteHeader() {
       <div className="site-rail-footer"><Link href="/" aria-label="엑스벤처 홈으로"><Brand tone="dark" /></Link><small>© EXVENTURE<br />All rights reserved.</small></div>
     </header>
     {open && <button type="button" className="mobile-menu-backdrop" tabIndex={-1} aria-label="메뉴 바깥 영역 닫기" onPointerDown={event => event.preventDefault()} onClick={closeAndFocus} />}
-    <div className="site-topbar"><div className="topbar-industrial" aria-hidden="true"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="360px" /></div><a className="frame-login" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a></div>
+    <div className="site-topbar"><div className="topbar-industrial" aria-hidden="true"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="360px" /></div><a className="frame-login" href={accountUrl}>직원 로그인</a></div>
   </>;
 }
 

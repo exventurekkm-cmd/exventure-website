@@ -40,7 +40,7 @@ export function InquiryForm({ policy, token, testOnly }: { policy: InquiryPolicy
     <p>{testOnly ? "가상 데이터 검증용 접수입니다. 실제 담당자에게 전달되는 문의가 아닙니다." : "문의 내용을 확인한 뒤 입력하신 이메일로 답변드리겠습니다."}</p>
     <dl><div><dt>접수번호</dt><dd>{reference}</dd></div></dl>
     <p className="contact-hint">접수번호를 보관해주세요. 이 화면에서 이메일 알림은 발송되지 않습니다.</p>
-    <button type="button" className="button primary" onClick={() => window.location.reload()}>새 문의 작성 <span aria-hidden="true">↗</span></button>
+    <button type="button" className="button primary" onClick={() => window.location.reload()}>새 문의 작성 </button>
   </section>;
   return <form ref={form} onSubmit={submit} noValidate className="contact-form" aria-busy={pending}>
     <p className="contact-required-note">이름·회신 이메일·문의 종류·내용과 개인정보 동의는 필수입니다.</p>
@@ -68,7 +68,7 @@ export function InquiryForm({ policy, token, testOnly }: { policy: InquiryPolicy
       <label className="contact-checkbox"><input id="inquiry-consent" name="consent" type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required aria-invalid={!!errors.consent} aria-describedby={describedBy("consent")} /><span>위 필수 개인정보 수집·이용에 동의합니다. <span className="contact-hint">(필수)</span></span></label>{fieldError("consent")}
     </fieldset>
     <div className="contact-trap" aria-hidden="true"><label htmlFor="inquiry-website">웹사이트</label><input id="inquiry-website" name="website" tabIndex={-1} autoComplete="off" defaultValue="" /></div>
-    <div className="contact-submit"><button type="submit" className="button primary" disabled={pending}>{pending ? "접수 중…" : testOnly ? "테스트 문의 저장" : "문의 보내기"}<span aria-hidden="true">↗</span></button><p className="contact-hint">저장이 확인되면 접수번호를 안내합니다.</p></div>
+    <div className="contact-submit"><button type="submit" className="button primary" disabled={pending}>{pending ? "접수 중…" : testOnly ? "테스트 문의 저장" : "문의 보내기"}</button><p className="contact-hint">저장이 확인되면 접수번호를 안내합니다.</p></div>
     <noscript><p>문의 접수에는 JavaScript가 필요합니다. 브라우저 설정에서 활성화한 뒤 다시 시도해주세요.</p></noscript>
   </form>;
 }

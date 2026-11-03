@@ -123,8 +123,8 @@ export function CompanyHistoryDirectory() {
               <p className="company-source">
                 {companyProfile.sourceLabel} · 주요 이력
               </p>
-              {activity && <Link className="editorial-link" href={"/activities/"+activity.slug} onClick={saveState}>활동 기록 보기 <span aria-hidden="true">↗</span></Link>}
-              <Link className="editorial-link" href="/contact" onClick={saveState}>문의 안내 <span aria-hidden="true">↗</span></Link>
+              {activity && <Link className="editorial-link" href={"/activities/"+activity.slug} onClick={saveState}>활동 기록 보기 </Link>}
+              <Link className="editorial-link" href="/contact" onClick={saveState}>문의 안내 </Link>
             </details>
           </li>
         );})}

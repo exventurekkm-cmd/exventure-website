@@ -7,6 +7,13 @@
   .editorial-site .lead-caption h2 { font-size: clamp(24px, 2vw, 34px); line-height: 1.5; letter-spacing: -.045em; }
   .editorial-site .ed-caption-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 14px; border: 1px solid #d8c9bf; border-radius: 4px; color: #9a390b; font-size: 12px; white-space: nowrap; }
   .editorial-site .ed-caption-link:hover { border-color: #ab4612; background: #fff4ec; }
+  html body.editorial-site.public-frame-site :is(.ed-text-link,.editorial-link,.frame-link,.contact-action) { text-decoration: underline; text-decoration-color: #aeb6bb; text-underline-offset: 5px; text-decoration-thickness: 1px; }
+  html body.editorial-site.public-frame-site :is(.ed-text-link,.editorial-link,.frame-link,.contact-action):is(:hover,:focus-visible) { color: #9a390b; text-decoration-color: currentColor; }
+  .editorial-site .related-activities > a { grid-template-columns: minmax(0,1fr) auto; }
+  .editorial-site .action-caption { font-size: 12px; font-weight: 500; white-space: nowrap; text-decoration: underline; text-underline-offset: 5px; }
+  .editorial-site .activity-list-action { text-decoration: underline; text-decoration-color: #b2babf; text-underline-offset: 5px; }
+  .editorial-site .program-link-list a:is(:hover,:focus-visible) { color: #9a390b; background: #fff8f3; text-decoration: underline; text-underline-offset: 5px; }
+  html body.editorial-site.public-frame-site .frame-login { justify-content: center; min-width: 96px; min-height: 44px; }
   .editorial-site :is(.ed-text-link,.editorial-link,.activity-list-action,.context-contact address a,.site-footer>a) { min-height: 44px; display: inline-flex; align-items: center; }
   .editorial-site .context-contact address { display: grid; gap: 0; }
   .editorial-site .context-company p { font-size: 13px; line-height: 1.85; }
