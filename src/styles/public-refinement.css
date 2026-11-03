@@ -1,6 +1,6 @@
 @media screen {
   .editorial-site { --exv-font: "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; }
-  html body.editorial-site.public-frame-site :is(.mobile-reading-nav a,.frame-breadcrumb,.frame-breadcrumb > span,.context-source,.context-records time,.site-footer>a,.directory-note,.directory-label,.example-label) { color: #626b70; }
+  html body.editorial-site.public-frame-site :is(.mobile-reading-nav a,.frame-breadcrumb,.frame-breadcrumb > span,.context-source,.context-records time,.site-footer>a,.directory-note,.directory-label,.example-label,.detail-heading > .frame-kicker,.detail-record dt) { color: #626b70; }
   html body.editorial-site.public-frame-site .content-directory a > span[aria-hidden=true] { color: #626b70; font-size: 12px; }
   .editorial-site .page-heading h1 { font-size: clamp(23px, 1.7vw, 30px); letter-spacing: -.04em; }
   .editorial-site .lead-caption { grid-template-columns: minmax(0,1fr) auto; align-items: start; gap: 14px 24px; }
