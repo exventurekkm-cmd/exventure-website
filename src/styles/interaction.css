@@ -1,0 +1,38 @@
+/* Shared screen interactions. Document/PDF renderers retain their own styles. */
+@media screen {
+  :root { --exv-font: "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; --exv-ease: cubic-bezier(.22,.7,.2,1); }
+  html body[data-exv-ui] { font-family: var(--exv-font); }
+  .exv-navigation-link { position: relative; }
+  .navigation-pending { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; overflow: hidden; pointer-events: none; opacity: 0; }
+  .navigation-pending[data-pending=true] { opacity: 1; transition: opacity .16s .15s; }
+  .navigation-pending[data-pending=true]::after { content: ""; display: block; width: 35%; height: 100%; background: var(--exv-orange); animation: exv-progress 1.1s ease-in-out infinite; }
+  :where(button, a, input, select, textarea, summary) { -webkit-tap-highlight-color: transparent; }
+  :where(.button, .text-button, .text-link, .nav-item, .directory-link, .identity-navigation a) { transition: background-color .18s, color .18s, border-color .18s, box-shadow .18s; }
+  :where(button, a, input, select, textarea, summary):focus-visible { outline: 2px solid var(--exv-brand); outline-offset: 4px; }
+  :where(.workspace-main, .identity-main, .main-content) > :is(.page-heading, .detail-heading, .sheet-guide, .stat-grid) { animation: exv-enter .32s var(--exv-ease) both; }
+  :where(.workspace-main, .identity-main, .main-content) > :is(.sheet-guide, .stat-grid) { animation-delay: .035s; }
+  :where(.identity-navigation[data-open=true] nav, .sidebar[data-open=true] nav, details[open] > :not(summary)) { animation: exv-enter .22s var(--exv-ease); }
+  :where(.identity-main, .main-content, .directory-content) { min-width: 0; }
+  :where(.identity-header, .detail-heading, .section-heading, .page-heading) { min-width: 0; }
+  :where(.identity-header, .detail-heading, .section-heading, .page-heading) > div { min-width: 0; }
+  @media (hover: hover) {
+    :where(.project-row, .company-link, .access-site-row, .nav-item):hover { background-color: #fff7f1; }
+  }
+  @media (max-width: 700px) {
+    html body[data-exv-ui] :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { font-size: 16px; }
+    html body[data-exv-ui] :is(.button, .text-button, .text-link, summary) { min-height: 44px; }
+    html body[data-exv-ui] :is(.page-heading, .detail-heading, .section-heading, .identity-header) { flex-wrap: wrap; gap: 12px; }
+    html body[data-exv-ui] :is(.page-heading, .detail-heading) h1 { font-size: clamp(25px, 6vw, 32px); }
+    html body[data-exv-ui] :is(.toolbar, .action-group) { flex-wrap: wrap; gap: 8px; }
+    html body[data-exv-ui] .identity-main { padding: 26px 18px 40px; }
+    html body[data-exv-ui] .identity-header { padding-inline: 18px; }
+  }
+  @keyframes exv-enter { from { opacity: .55; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes exv-progress { from { transform: translateX(-110%); } to { transform: translateX(390%); } }
+  @media (prefers-reduced-motion: reduce) {
+    :where(.workspace-main, .identity-main, .main-content) > *, .identity-navigation nav, .sidebar nav, details[open] > :not(summary) { animation: none; }
+    :where(.button, .text-button, .text-link, .nav-item, .directory-link, .identity-navigation a) { transition: none; }
+    .navigation-pending[data-pending=true]::after { animation: none; width: 100%; }
+    html { scroll-behavior: auto; }
+  }
+}

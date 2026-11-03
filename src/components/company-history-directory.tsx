@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { companyHistory, companyProfile } from "@/lib/company-profile";
 import { publicActivities } from "@/lib/public-activities";
@@ -122,8 +123,8 @@ export function CompanyHistoryDirectory() {
               <p className="company-source">
                 {companyProfile.sourceLabel} · 주요 이력
               </p>
-              {activity && <a className="editorial-link" href={"/activities/"+activity.slug} onClick={saveState}>활동 기록 보기 <span aria-hidden="true">↗</span></a>}
-              <a className="editorial-link" href="/contact" onClick={saveState}>문의 안내 <span aria-hidden="true">↗</span></a>
+              {activity && <Link className="editorial-link" href={"/activities/"+activity.slug} onClick={saveState}>활동 기록 보기 <span aria-hidden="true">↗</span></Link>}
+              <Link className="editorial-link" href="/contact" onClick={saveState}>문의 안내 <span aria-hidden="true">↗</span></Link>
             </details>
           </li>
         );})}

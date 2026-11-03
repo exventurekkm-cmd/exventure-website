@@ -1,4 +1,5 @@
 "use client";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -48,11 +49,11 @@ export function SiteHeader() {
   const closeAndFocus = () => { setOpen(false); toggle.current?.focus(); };
   return <>
     <header className="site-header" data-open={open} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }} onKeyDown={event => { if (event.key === "Escape" && open) { setOpen(false); toggle.current?.focus(); } }}>
-      <a className="site-brand" href="/" aria-label="엑스벤처 홈페이지" onClick={() => setOpen(false)}><Brand tone="dark" /></a>
+      <Link className="site-brand" href="/" aria-label="엑스벤처 홈페이지" onClick={() => setOpen(false)}><Brand tone="dark" /></Link>
       <button ref={toggle} className="site-menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(value => !value)}>{open ? "메뉴 닫기" : "메뉴 열기"}<span className="menu-glyph" aria-hidden="true"><i /><i /></span></button>
-      <nav id="site-navigation" aria-label="주 메뉴">{publicNavigation.map(item => <a key={item.href} href={item.href} aria-current={currentHref === item.href ? "page" : undefined} onClick={() => setOpen(false)}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d={item.path} /></svg>{item.label}</a>)}</nav>
+      <nav id="site-navigation" aria-label="주 메뉴">{publicNavigation.map(item => <Link key={item.href} href={item.href} aria-current={currentHref === item.href ? "page" : undefined} onClick={() => setOpen(false)}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d={item.path} /></svg>{item.label}</Link>)}</nav>
       <div className="site-manifesto"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="768px" /></div>
-      <div className="site-rail-footer"><a href="/" aria-label="엑스벤처 홈으로"><Brand tone="dark" /></a><small>© EXVENTURE<br />All rights reserved.</small></div>
+      <div className="site-rail-footer"><Link href="/" aria-label="엑스벤처 홈으로"><Brand tone="dark" /></Link><small>© EXVENTURE<br />All rights reserved.</small></div>
     </header>
     {open && <button type="button" className="mobile-menu-backdrop" tabIndex={-1} aria-label="메뉴 바깥 영역 닫기" onPointerDown={event => event.preventDefault()} onClick={closeAndFocus} />}
     <div className="site-topbar"><div className="topbar-industrial" aria-hidden="true"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="360px" /></div><a className="frame-login" href={accountUrl}>로그인 <span aria-hidden="true">↗</span></a></div>
