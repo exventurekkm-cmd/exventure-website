@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import "@/styles/exventure.css";
 import "./globals.css";
@@ -7,6 +8,8 @@ import "@/styles/reference-site.css";
 import "@/styles/public-frame.css";
 import "@/styles/editorial-fonts.css";
 import "@/styles/editorial-site.css";
+import "@/styles/interaction.css";
+import "@/styles/public-refinement.css";
 import { SiteHeader, SkipLink } from "@/components/site-header";
 import { ContentDirectory, CompanyContext } from "@/components/public-frame";
 
@@ -22,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <div className="reference-shell">
     <div className="public-frame-grid"><ContentDirectory /><div className="frame-content">{children}</div><CompanyContext /></div>
     <footer className="site-footer">
-      <p>© 주식회사 엑스벤처</p><a href="/privacy">개인정보 안내</a>
+      <p>© 주식회사 엑스벤처</p><Link href="/privacy">개인정보 안내</Link>
     </footer>
     </div>
   </body></html>;

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { ReadingNav } from "@/components/reading-nav";
 import { companyHistory, companyProfile } from "@/lib/company-profile";
@@ -17,11 +18,11 @@ export function CompanyContext() {
       <section className="context-updates"><h2>최근 기록</h2>
         <ol className="context-records">{companyHistory.slice(0,3).map(record => {
           const activity = publicActivities.find(item => item.date === record.date && item.title === record.title);
-          return <li key={record.date}><a href={activity ? "/activities/"+activity.slug : historyRecordHref(record.date)}>
+          return <li key={record.date}><Link href={activity ? "/activities/"+activity.slug : historyRecordHref(record.date)}>
             <time dateTime={record.date.replace(".","-")}>{record.date}</time><p>{record.title}</p>
-          </a>
+          </Link>
         </li>;})}</ol>
-        <a className="ed-text-link" href="/about#company-history">전체 이력 <span aria-hidden="true">↗</span></a>
+        <Link className="ed-text-link" href="/about#company-history">전체 이력 </Link>
       </section>
       <section className="context-company"><h2>{companyProfile.name}</h2>
         <p>창업 교육과 컨설팅,<br />사업화·시장 검증·해외 진출 준비를 함께합니다.</p>
