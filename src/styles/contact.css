@@ -53,6 +53,12 @@
 .contact-aside h3 { margin: -3px 0 8px; font-size: 16px; font-weight: 600; }
 .contact-aside li p { margin: 0; color: var(--exv-muted); font-size: 14px; line-height: 1.9; }
 .contact-unavailable, .contact-receipt { padding: 28px 0 50px; }
+.email-inquiry > h2 { margin: 18px 0 12px; font-size: 28px; font-weight: 600; letter-spacing: -.04em; }
+.email-inquiry > form { margin-top: 28px; }
+.email-draft { padding: 22px; margin-top: 24px; background: #f8faf7; border: 1px solid #c9cfcc; }
+.email-draft > label { display: block; margin-bottom: 12px; font-size: 16px; font-weight: 600; }
+.email-draft > textarea { width: 100%; padding: 12px; font: inherit; font-size: 16px; line-height: 1.8; color: var(--exv-ink); background: white; border: 1px solid #8d9993; resize: vertical; }
+.draft-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
 .contact-unavailable h2, .contact-receipt h2 { margin: 24px 0 18px; font-size: 28px; font-weight: 600; line-height: 1.5; }
 .contact-unavailable > p:not(.editorial-label), .contact-receipt > p { max-width: 580px; line-height: 1.9; }
 .contact-unavailable .editorial-link { margin-top: 16px; }

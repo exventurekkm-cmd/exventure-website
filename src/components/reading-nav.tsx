@@ -9,7 +9,7 @@ const pageChapters: Record<string, readonly Chapter[]> = {
   "/activities": [{ id: "activity-list", label: "주요 활동 목록" }],
   "/contact": [{ id: "company-contact-title", label: "회사 연락처" }],
   "/privacy": [{ id: "main", label: "개인정보 안내" }],
-  "/tools": [{ id: "main", label: "직원 이용 안내" }],
+  "/tools": [{ id: "tool-directory", label: "도구 선택" }, { id: "tool-workarea-title", label: "작성 도구" }, { id: "tool-guide", label: "활용 방법" }, { id: "tool-staff", label: "직원 업무 공간" }],
   "/news": [{ id: "main", label: "소식 안내" }],
 };
 const detailChapters = [{ id: "record-title", label: "활동 기록" }, { id: "more-programs", label: "관련 지원 프로그램" }, { id: "related-activities", label: "다른 활동" }];
