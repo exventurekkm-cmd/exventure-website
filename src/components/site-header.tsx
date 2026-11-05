@@ -12,6 +12,7 @@ const publicNavigation = [
   { href: "/business", label: "사업 영역", path: "M4 8h16v12H4ZM8 8V4h8v4M4 13h16" },
   { href: "/activities", label: "주요 활동", path: "M4 5h16v15H4ZM8 9h8m-8 4h8m-8 4h5" },
   { href: "/about#company-history", label: "연혁", path: "M5 3h14v18H5ZM9 7h6m-6 5h6m-6 5h4" },
+  { href: "/tools", label: "창업지원 도구", path: "M4 4h16v16H4ZM8 8h8m-8 4h8m-8 4h4" },
   { href: "/contact", label: "문의", path: "M3 5h18v14H3ZM3 5l9 7 9-7" },
 ] as const;
 
