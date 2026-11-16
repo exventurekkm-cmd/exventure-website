@@ -23,7 +23,7 @@ export async function inquiryAdminContext(request?: Request): Promise<InquiryAdm
   if (process.env.VERCEL || process.env.VERCEL_ENV) return null;
   const role = process.env.WEBSITE_INQUIRY_LOCAL_ADMIN_ROLE ?? "viewer";
   const fixture: typeof fetch = async () => Response.json({ active: true, account_id: fixtureAdminId, application_id: websiteApplication, role });
-  const permitted = await checkInquiryAdminAccess({ subject: fixtureAdminId, accessToken: "local-synthetic-session", expiresAt: Date.now() + 60_000 }, fixtureAdminId, fixture);
+  const permitted = await checkInquiryAdminAccess({ subject: fixtureAdminId, accessToken: "local-synthetic-session", expiresAt: Date.now() + 60_000 }, [fixtureAdminId], fixture);
   if (!permitted) return null;
   return { store: await inquiryStore(settings), actorId: fixtureAdminId, origin: settings.origin, testOnly: true };
 }
