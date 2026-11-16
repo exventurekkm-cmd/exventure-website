@@ -16,20 +16,22 @@ import { handlePrivacySettingRequest, handleCompleteInquiryRequest } from '../sr
 import { localIntegration } from '../src/lib/local-integration.ts';
 
 const actor = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', other = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+const approvedActors = [actor, other, 'cccccccc-cccc-4ccc-8ccc-cccccccccccc', 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'];
 const origin = 'https://website.example.invalid', clientId = 'ephemeral-fixture-client';
-const config = () => ({ origin, issuer: companyIssuer, portal: companyPortal, clientId, key: randomBytes(32).toString('hex'), approvedAccountId: actor });
+const config = () => ({ origin, issuer: companyIssuer, portal: companyPortal, clientId, key: randomBytes(32).toString('hex'), approvedAccountIds: [actor] });
 const cookiePair = value => value.split(';')[0];
 const callback = (authorization, header) => new Request(`${authorization.searchParams.get('redirect_uri')}?code=synthetic-one-use-code&state=${authorization.searchParams.get('state')}`, { headers: { cookie: header, ...(authorization.searchParams.get('redirect_uri').startsWith(localIntegration.origin)?{host:'127.0.0.1:3003'}:{}) } });
 const mutation = (path, body, cookie, requestOrigin = origin) => new Request(`${origin}${path}`, { method: 'POST', headers: { origin: requestOrigin, 'content-type': 'application/json', cookie }, body: JSON.stringify(body) });
 
-async function fixture(t, local = false, metadataOverrides = {}) {
+async function fixture(t, local = false, metadataOverrides = {}, subject = actor, approvedAccountIds = [actor]) {
   const dir = mkdtempSync(join(tmpdir(), 'exv-company-')), file = join(dir, 'test.sqlite');
   const store = new LocalInquiryStore(file), cfg = local ? { ...config(), origin:localIntegration.origin, issuer:localIntegration.issuer, portal:localIntegration.portal, localIntegration:true } : config();
+  cfg.approvedAccountIds = approvedAccountIds;
   t.after(() => { store.close(); const target = resolve(dir); assert.ok(target.startsWith(resolve(tmpdir()) + sep) && basename(target).startsWith('exv-company-')); rmSync(target, { recursive: true, force: true }); });
   const pair = await generateKeyPair('ES256'), wrongPair = await generateKeyPair('ES256');
   const jwk = { ...await exportJWK(pair.publicKey), kid: 'ephemeral-key', alg: 'ES256', use: 'sig' };
   const metadata = { issuer: cfg.issuer, authorization_endpoint: `${cfg.issuer}/oauth/authorize`, token_endpoint: `${cfg.issuer}/oauth/token`, jwks_uri: `${cfg.issuer}/.well-known/jwks.json`, response_types_supported: ['code'], subject_types_supported: ['public'], id_token_signing_alg_values_supported: ['ES256'], token_endpoint_auth_methods_supported: ['none'], code_challenge_methods_supported: ['S256'], ...metadataOverrides };
-  let authorization, variant = {}, access = { active: true, account_id: actor, application_id: 'exventure-website', role: 'admin' };
+  let authorization, variant = {}, access = { active: true, account_id: subject, application_id: 'exventure-website', role: 'admin' };
   const stats = { exchanges: 0, permissionChecks: 0 }, events = [];
   const transport = async (url, options) => {
     if (url === `${cfg.issuer}/.well-known/openid-configuration`) return Response.json(metadata);
@@ -40,7 +42,7 @@ async function fixture(t, local = false, metadataOverrides = {}) {
     assert.equal(body.get('grant_type'), 'authorization_code'); assert.equal(body.get('code'), 'synthetic-one-use-code');
     assert.equal(body.has('client_secret'), false);
     if (await oidc.calculatePKCECodeChallenge(body.get('code_verifier')) !== authorization.searchParams.get('code_challenge')) return Response.json({ error: 'invalid_grant' }, { status: 400 });
-    const claims = { iss: cfg.issuer, sub: actor, aud: clientId, nonce: authorization.searchParams.get('nonce'), iat: Math.floor(Date.now()/1000), exp: Math.floor(Date.now()/1000)+600, ...variant.claims };
+    const claims = { iss: cfg.issuer, sub: subject, aud: clientId, nonce: authorization.searchParams.get('nonce'), iat: Math.floor(Date.now()/1000), exp: Math.floor(Date.now()/1000)+600, ...variant.claims };
     const alg = variant.wrongAlgorithm ? 'HS256' : 'ES256', key = variant.wrongAlgorithm ? randomBytes(32) : variant.badSignature ? wrongPair.privateKey : pair.privateKey;
     const idToken = await new SignJWT(claims).setProtectedHeader({ alg, kid: 'ephemeral-key' }).sign(key);
     return Response.json({ access_token: 'synthetic-central-token', token_type: 'Bearer', expires_in: variant.expiresIn ?? 3600, ...(variant.missingIdToken ? {} : { id_token: idToken }) });
@@ -77,6 +79,36 @@ test('company setup has no default credentials, grant, hosted fixture, or HTTP d
   assert.ok(readCompanyConfig(env)); // Administrator setup can run while public collection stays disabled.
   for (const change of [{ WEBSITE_COMPANY_AUTH_PROVISIONED: 'false' }, { WEBSITE_COMPANY_SESSION_KEY: '' }, { WEBSITE_COMPANY_ADMIN_ACCOUNT_ID: other.replace('b','x') }, { WEBSITE_INQUIRY_ORIGIN: 'http://127.0.0.1:3003' }, { WEBSITE_INQUIRY_MODE: 'local-test' }, { WEBSITE_INQUIRY_DB_URL: 'https://yyoyeyvgpfybsjpgaouv.supabase.co' }, { WEBSITE_COMPANY_TEST_PROJECT_REF:'gszfrbzvketspsipcitj' }, { WEBSITE_COMPANY_TEST_PORTAL_ORIGIN:companyPortal }, { WEBSITE_COMPANY_TEST_PORTAL_ORIGIN:'https://exventure-accounts.vercel.app' }, { WEBSITE_COMPANY_TEST_PORTAL_ORIGIN:'http://127.0.0.1:3002' }]) assert.equal(readCompanyConfig({ ...env, ...change }), null);
   assert.equal(readCompanyConfig(env).issuer,'https://qrstuvwxyzabcdefghij.supabase.co/auth/v1');
+  assert.deepEqual(readCompanyConfig(env).approvedAccountIds,[actor]);
+  const list = approvedActors.join(', ');
+  assert.deepEqual(readCompanyConfig({...env,WEBSITE_COMPANY_ADMIN_ACCOUNT_IDS:` ${list}, ${actor} `}).approvedAccountIds,approvedActors);
+  assert.deepEqual(readCompanyConfig({...env,WEBSITE_COMPANY_ADMIN_ACCOUNT_IDS:other}).approvedAccountIds,[other]);
+  assert.deepEqual(readCompanyConfig({...env,WEBSITE_COMPANY_ADMIN_ACCOUNT_ID:undefined,WEBSITE_COMPANY_ADMIN_ACCOUNT_IDS:list}).approvedAccountIds,approvedActors);
+  for (const invalid of ['', ' ', `${actor},`, `,${actor}`, `${actor},invalid`, `${actor};${other}`, Array(101).fill(actor).join(','), ' '.repeat(4097)]) {
+    assert.equal(readCompanyConfig({...env,WEBSITE_COMPANY_ADMIN_ACCOUNT_IDS:invalid}),null);
+  }
+});
+test('all four approved website administrators can sign in and use protected sessions; removing one revokes that session',async t=>{
+  for (const subject of approvedActors) await t.test(subject,async st=>{
+    const f=await fixture(st,false,{},subject,approvedActors),start=await f.start();
+    const response=await handleCompanyCallback(callback(start.authorization,start.header),f.deps);
+    assert.equal(response.headers.get('location'),`${origin}/admin/inquiries`);
+    const session=cookiePair(response.headers.getSetCookie()[1]),hash=sessionHash(session.split('=')[1]);
+    assert.equal((await authorizeWebsiteSession(session,f.cfg,f.store,f.fetcher)).subject,subject);
+    const permissionChecks=f.stats.permissionChecks;
+    f.cfg.approvedAccountIds=approvedActors.filter(id=>id!==subject);
+    assert.equal(await authorizeWebsiteSession(session,f.cfg,f.store,f.fetcher),null);
+    assert.equal(await f.store.readSession(hash),null);
+    assert.equal(f.stats.permissionChecks,permissionChecks);
+  });
+});
+test('central website admin permission alone cannot admit an account outside the configured list',async t=>{
+  const subject='eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+  const f=await fixture(t,false,{},subject,approvedActors),start=await f.start();
+  const response=await handleCompanyCallback(callback(start.authorization,start.header),f.deps);
+  assert.equal(response.headers.get('location'),`${origin}/admin/login?status=denied`);
+  assert.equal(response.headers.getSetCookie().length,1);
+  assert.equal(f.stats.permissionChecks,0);
 });
 test('AES-GCM purpose binding, expiry and corruption protect login/session data', () => {
   const cfg = config(), data = { accessToken: 'synthetic-hidden-token', subject: actor, expiresAt: Date.now()+60_000 };

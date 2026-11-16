@@ -10,7 +10,7 @@ export async function authorizeWebsiteSession(cookie: string | null, config: Com
     const payload = await store.readSession(hash);
     if (!payload) return null;
     const session = openCompanyData<CompanySession>(payload, config.key, "session");
-    if (!uuidPattern.test(session.subject) || typeof session.accessToken !== "string" || !await checkInquiryAdminAccess(session, config.approvedAccountId, fetcher, config.portal)) {
+    if (!uuidPattern.test(session.subject) || typeof session.accessToken !== "string" || !await checkInquiryAdminAccess(session, config.approvedAccountIds, fetcher, config.portal)) {
       await store.deleteSession(hash); return null;
     }
     return session;

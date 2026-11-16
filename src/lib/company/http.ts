@@ -50,7 +50,7 @@ export async function handleCompanyCallback(request: Request, deps: CompanyDepen
     if (expiresAt < now + 30_000) throw new Error("company_expired");
     const session = { subject: claims.sub, accessToken: tokens.access_token, expiresAt };
     failure = "denied";
-    if (!await checkInquiryAdminAccess(session, config.approvedAccountId, deps.fetcher, config.portal)) throw new Error("company_denied");
+    if (!await checkInquiryAdminAccess(session, config.approvedAccountIds, deps.fetcher, config.portal)) throw new Error("company_denied");
     failure = "unavailable";
     const id = newSessionId();
     await deps.store.storeSession(sessionHash(id), session.subject, sealCompanyData(session, config.key, "session"), expiresAt);

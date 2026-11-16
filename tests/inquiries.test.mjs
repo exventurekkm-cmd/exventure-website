@@ -143,12 +143,14 @@ test('contact settings are independent, versioned, durable and record only the a
 test('only a fresh, active, approved website admin session passes access verification', async () => {
   const id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', session = { subject: id, accessToken: 'synthetic-test-token', expiresAt: Date.now() + 60000 };
   const good = { active: true, account_id: id, application_id: 'exventure-website', role: 'admin' };
-  for (const patch of [{ role: 'viewer' }, { role: 'member' }, { active: false }, { application_id: 'management-site' }, { account_id: randomUUID() }]) assert.equal(await checkInquiryAdminAccess(session, id, async () => Response.json({ ...good, ...patch })), false);
-  assert.equal(await checkInquiryAdminAccess(session, id, async () => Response.json(good)), true);
-  assert.equal(await checkInquiryAdminAccess(null, id), false);
-  assert.equal(await checkInquiryAdminAccess({ ...session, expiresAt: 0 }, id), false);
-  assert.equal(await checkInquiryAdminAccess(session, id, async () => { throw new Error('unavailable'); }), false);
-  assert.equal(await checkInquiryAdminAccess(session, id, async () => new Response('', { status: 403 })), false);
+  for (const patch of [{ role: 'viewer' }, { role: 'member' }, { active: false }, { application_id: 'management-site' }, { account_id: randomUUID() }]) assert.equal(await checkInquiryAdminAccess(session, [id], async () => Response.json({ ...good, ...patch })), false);
+  assert.equal(await checkInquiryAdminAccess(session, [id], async () => Response.json(good)), true);
+  assert.equal(await checkInquiryAdminAccess(null, [id]), false);
+  assert.equal(await checkInquiryAdminAccess({ ...session, expiresAt: 0 }, [id]), false);
+  assert.equal(await checkInquiryAdminAccess(session, [], async () => { throw new Error('must not fetch'); }), false);
+  assert.equal(await checkInquiryAdminAccess(session, [randomUUID()], async () => { throw new Error('must not fetch'); }), false);
+  assert.equal(await checkInquiryAdminAccess(session, [id], async () => { throw new Error('unavailable'); }), false);
+  assert.equal(await checkInquiryAdminAccess(session, [id], async () => new Response('', { status: 403 })), false);
 });
 test('settings/complete APIs deny missing permission and cross-origin requests; errors do not overwrite settings', async t => {
   const { store } = fixture(t), context = { store, origin, actorId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' };
