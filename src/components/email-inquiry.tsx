@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { prepareInquiryEmail } from "@/lib/public-tools";
 import { findInterest, interestPrefix } from "@/lib/explore";
 import { InterestOptions } from "./interest-select";
@@ -17,6 +17,8 @@ export function EmailInquiry({ recipient, initialInterest }: { recipient: string
   const prefix = interestPrefix(choice);
   const limit = 3000 - prefix.length;
 
+  useLayoutEffect(() => { if (draft) result.current?.focus(); }, [draft]);
+
   function clearDraft() { setDraft(null); setStatus(""); }
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,7 +30,6 @@ export function EmailInquiry({ recipient, initialInterest }: { recipient: string
     }
     setDraft(prepareInquiryEmail(choice.topic, title, prefix + message.trim(), recipient));
     setStatus("초안을 만들었습니다. 이메일 앱에서 내용을 확인한 뒤 보내주세요.");
-    requestAnimationFrame(() => result.current?.focus());
   }
   async function copy() {
     if (!draft) return;

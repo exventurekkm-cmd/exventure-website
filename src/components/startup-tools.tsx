@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { createStartupNote, startupTools, type StartupTool } from "@/lib/public-tools";
 
 export function ToolWorksheet({ kind }: { kind: StartupTool }) {
@@ -10,6 +10,8 @@ export function ToolWorksheet({ kind }: { kind: StartupTool }) {
   const [status, setStatus] = useState("");
   const output = useRef<HTMLTextAreaElement>(null);
   const completed = tool.fields.filter(f => (answers[f.key] ?? "").trim().length >= 2).length;
+
+  useLayoutEffect(() => { if (note) output.current?.focus(); }, [note]);
 
   function build(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,7 +24,6 @@ export function ToolWorksheet({ kind }: { kind: StartupTool }) {
     }
     setNote(createStartupNote(kind, answers));
     setStatus("정리 문서를 만들었습니다.");
-    requestAnimationFrame(() => output.current?.focus());
   }
   async function copy() {
     try {
