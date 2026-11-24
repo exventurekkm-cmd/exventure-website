@@ -23,6 +23,8 @@
 
 ## 관리자 인증 연결
 
+2026-11-24 중앙 마스터 연동: 아래 일반 관리자 허용 목록 규칙에 중앙의 현재 `is_master=true`인 계정만 예외를 둔다. 서명·세션 검증 후 같은 홈페이지와 사용자에 대한 `active=true`, `role=admin`, `is_master=true`를 요청마다 중앙에서 확인해야 한다. 로컬 세션·JWT의 마스터 주장으로 대체하지 않는다. 일반 관리자의 목록 제한과 마스터 해제·중지·실패 시 접근 거절은 유지한다.
+
 로컬 fixture에서 /admin/inquiries와 /admin/inquiries/settings, 완료 삭제/연락처 수정 API를 검증한다. local-test·loopback·VERCEL 환경 없음·WEBSITE_INQUIRY_LOCAL_ADMIN_ROLE=admin을 모두 만족해야 한다. 기본 fixture 역할은 viewer이며 조회·설정·삭제가 거절된다. 실제 회사 계정/쿠키/권한을 사용하거나 변경하지 않는다.
 
 `/admin/login`, `/auth/company/start`, `/auth/company/callback`, POST `/auth/company/logout`을 기존 accounts/workspace의 public-client Authorization Code+PKCE 계약으로 구현했다. `openid-client` 6.8.8의 ES256 non-repudiation 검증을 사용하고 임의 JWT/OAuth 프로토콜은 만들지 않는다. state/nonce와 S256 PKCE, issuer/audience/서명/만료 검증을 모두 거친다. OAuth client secret은 요구하지 않는다. 로그인 시도는 AES-256-GCM 암호화한 10분 HttpOnly/Secure/SameSite=Lax 쿠키로 관리하며, 성공 시 브라우저에는 임의 256-bit 세션 ID만 둔다. access token은 암호화해 website_private.company_sessions에 저장하고 DB에는 ID의 SHA-256만 저장한다. 만료는 ID token/access token 기간과 1시간 중 짧은 기간에서 15초를 뺀 값이다. 홈페이지용 Supabase Auth 사용자·이메일 동일인 자동 연결·refresh token 발급은 추가하지 않는다.

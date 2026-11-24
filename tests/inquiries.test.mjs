@@ -147,10 +147,27 @@ test('only a fresh, active, approved website admin session passes access verific
   assert.equal(await checkInquiryAdminAccess(session, [id], async () => Response.json(good)), true);
   assert.equal(await checkInquiryAdminAccess(null, [id]), false);
   assert.equal(await checkInquiryAdminAccess({ ...session, expiresAt: 0 }, [id]), false);
-  assert.equal(await checkInquiryAdminAccess(session, [], async () => { throw new Error('must not fetch'); }), false);
-  assert.equal(await checkInquiryAdminAccess(session, [randomUUID()], async () => { throw new Error('must not fetch'); }), false);
+  assert.equal(await checkInquiryAdminAccess(session, [], async () => Response.json(good)), false);
+  assert.equal(await checkInquiryAdminAccess(session, [randomUUID()], async () => Response.json(good)), false);
   assert.equal(await checkInquiryAdminAccess(session, [id], async () => { throw new Error('unavailable'); }), false);
   assert.equal(await checkInquiryAdminAccess(session, [id], async () => new Response('', { status: 403 })), false);
+});
+
+test('live central masters can administer without a local allowlist entry; revocation and token boundaries still apply', async () => {
+  const id = randomUUID(), session = { subject: id, accessToken: 'synthetic-master-token', expiresAt: Date.now() + 60000 };
+  const master = { active: true, account_id: id, application_id: 'exventure-website', role: 'admin', is_master: true };
+  assert.equal(await checkInquiryAdminAccess(session, [], async (_url, options) => {
+    assert.equal(options.cache, 'no-store');
+    assert.equal(options.redirect, 'error');
+    assert.equal(options.headers.Authorization, `Bearer ${session.accessToken}`);
+    return Response.json(master);
+  }), true);
+  for (const patch of [{ is_master: false }, { is_master: 'true' }, { is_master: null }, { role: 'member' }, { active: false }, { account_id: randomUUID() }, { application_id: 'management-site' }]) {
+    assert.equal(await checkInquiryAdminAccess({ ...session, is_master: true }, [], async () => Response.json({ ...master, ...patch })), false);
+  }
+  assert.equal(await checkInquiryAdminAccess({ ...session, expiresAt: 0 }, [], async () => Response.json(master)), false);
+  for (const status of [401, 403, 503]) assert.equal(await checkInquiryAdminAccess(session, [], async () => new Response('', { status })), false);
+  assert.equal(await checkInquiryAdminAccess(session, [], async () => { throw new Error('central unavailable'); }), false);
 });
 test('settings/complete APIs deny missing permission and cross-origin requests; errors do not overwrite settings', async t => {
   const { store } = fixture(t), context = { store, origin, actorId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' };
