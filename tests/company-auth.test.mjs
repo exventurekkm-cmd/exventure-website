@@ -99,7 +99,7 @@ test('all four approved website administrators can sign in and use protected ses
     f.cfg.approvedAccountIds=approvedActors.filter(id=>id!==subject);
     assert.equal(await authorizeWebsiteSession(session,f.cfg,f.store,f.fetcher),null);
     assert.equal(await f.store.readSession(hash),null);
-    assert.equal(f.stats.permissionChecks,permissionChecks);
+    assert.equal(f.stats.permissionChecks,permissionChecks+1);
   });
 });
 test('central website admin permission alone cannot admit an account outside the configured list',async t=>{
@@ -108,7 +108,21 @@ test('central website admin permission alone cannot admit an account outside the
   const response=await handleCompanyCallback(callback(start.authorization,start.header),f.deps);
   assert.equal(response.headers.get('location'),`${origin}/admin/login?status=denied`);
   assert.equal(response.headers.getSetCookie().length,1);
-  assert.equal(f.stats.permissionChecks,0);
+  assert.equal(f.stats.permissionChecks,1);
+});
+
+test('a central master outside the local list signs in, then loses access immediately when central master access is removed',async t=>{
+  const subject='eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+  const f=await fixture(t,false,{},subject,approvedActors);
+  const access={active:true,account_id:subject,application_id:'exventure-website',role:'admin',is_master:true};
+  f.setAccess(access);
+  const start=await f.start(),response=await handleCompanyCallback(callback(start.authorization,start.header),f.deps);
+  assert.equal(response.headers.get('location'),`${origin}/admin/inquiries`);
+  const session=cookiePair(response.headers.getSetCookie()[1]),hash=sessionHash(session.split('=')[1]);
+  assert.equal((await authorizeWebsiteSession(session,f.cfg,f.store,f.fetcher)).subject,subject);
+  f.setAccess({...access,is_master:false});
+  assert.equal(await authorizeWebsiteSession(session,f.cfg,f.store,f.fetcher),null);
+  assert.equal(await f.store.readSession(hash),null);
 });
 test('AES-GCM purpose binding, expiry and corruption protect login/session data', () => {
   const cfg = config(), data = { accessToken: 'synthetic-hidden-token', subject: actor, expiresAt: Date.now()+60_000 };
