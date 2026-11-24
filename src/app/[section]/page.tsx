@@ -17,5 +17,5 @@ export async function generateMetadata({ params }: { params: Promise<{ section: 
 }
 export default async function SectionPage({ params }: { params: Promise<{ section: string }> }) {
   const key = (await params).section, section = readSection(key);
-  return <main id="main" tabIndex={-1} className="section-page"><p className="eyebrow">{section.eyebrow}</p><h1>{section.title}</h1><p className="lead">{section.description}</p>{key === "about" && <CompanyOverview />}{key === "business" && <BusinessPrograms />}{key === "tools" && <StartupTools />}<div className="section-actions"><Link href="/" className="text-link">홈으로 돌아가기</Link>{key === "tools" && <a className="button primary" href={accountUrl}>직원 로그인 </a>}</div></main>;
+  return <main id="main" tabIndex={-1} className="section-page"><p className="eyebrow">{section.eyebrow}</p><h1>{section.title}</h1><p className="lead">{section.description}</p>{key === "about" && <CompanyOverview />}{key === "business" && <BusinessPrograms />}{key === "tools" && <StartupTools />}<div className="section-actions"><Link href="/" className="text-link">홈으로 돌아가기</Link>{key === "tools" && <a className="button primary" href={accountUrl}>직원 업무 홈</a>}</div></main>;
 }
