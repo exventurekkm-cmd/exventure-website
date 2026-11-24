@@ -13,6 +13,8 @@ const { staffLoginUrl } = await import(websiteLogin.href);
 const destinations = new Set([
   "/", "/roadmap", "/workspace", "/research", "/companies", "/mentoring", "/consulting",
   "/roadmap/quarters?year=2026", "/mentoring/new",
+  "/assignments", "/assignments/manage?member=91000000-0000-4000-8000-000000000001",
+  "/assignments/results/91000000-0000-4000-8000-000000000002",
 ]);
 
 const workspaceDir = process.env.EXVENTURE_WORKSPACE_DIR;

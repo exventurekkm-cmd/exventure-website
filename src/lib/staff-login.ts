@@ -2,7 +2,7 @@
 export function staffReturnPath(value: unknown): string {
   if (typeof value !== "string" || value.length > 2000 || /[%\\\x00-\x20#]/.test(value)) return "/";
   if (value === "/consulting" || value === "/consulting/") return "/consulting";
-  const allowed = /^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|companies(?:\/|\?|$)|mentoring(?:\/|\?|$)|research$)/;
+  const allowed = /^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|assignments(?:\/|\?|$)|companies(?:\/|\?|$)|mentoring(?:\/|\?|$)|research$)/;
   if (!allowed.test(value)) return "/";
   const url = new URL(value, "https://workspace.exventure.co.kr");
   if (!allowed.test(url.pathname) || /\/(?:auth|login|oauth|accounts|account)(?:\/|$)/.test(url.pathname)) return "/";
