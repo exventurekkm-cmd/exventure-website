@@ -73,7 +73,7 @@ test('migration and production RPC contract run on isolated PostgreSQL with fixt
   await t.test('90-day deadline and security/history expiry are purged without touching settings', async () => {
     await rpc('submit_website_inquiry', { p_submission: submission() });
     await db.exec('reset role');
-    await db.exec("with fixed as (select clock_timestamp() t) update website_private.inquiries set created_at=fixed.t-interval '91 days',expires_at=fixed.t-interval '1 day' from fixed; update website_private.inquiry_rate_limits set window_start=clock_timestamp()-interval '2 hours',expires_at=clock_timestamp()-interval '1 hour'; update website_private.setting_events set created_at=clock_timestamp()-interval '91 days'; set role service_role;");
+    await db.exec("with fixed as (select clock_timestamp() t) update website_private.inquiries set created_at=fixed.t-interval '91 days',expires_at=fixed.t-interval '1 day' from fixed; update website_private.inquiry_rate_limits set window_start=statement_timestamp()-interval '2 hours',expires_at=statement_timestamp()-interval '1 hour'; update website_private.setting_events set created_at=clock_timestamp()-interval '91 days'; set role service_role;");
     const deleted = await rpc('purge_expired_website_inquiries'); assert.equal(deleted.inquiriesDeleted, 1); assert.equal(deleted.rateEntriesDeleted, 3); assert.equal(deleted.historyEntriesDeleted, 1);
     assert.deepEqual(await rpc('website_privacy_setting'), { email: 'privacy@example.invalid', version: 1 });
   });
