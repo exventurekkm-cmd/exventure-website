@@ -1,9 +1,11 @@
 /** A return path is data, never a caller-supplied origin or an auth URL. */
 export function staffReturnPath(value: unknown): string {
   if (typeof value !== "string" || value.length > 2000 || /[%\\\x00-\x20#]/.test(value)) return "/";
-  if (!/^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|research$)/.test(value)) return "/";
+  if (value === "/consulting" || value === "/consulting/") return "/consulting";
+  const allowed = /^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|companies(?:\/|\?|$)|mentoring(?:\/|\?|$)|research$)/;
+  if (!allowed.test(value)) return "/";
   const url = new URL(value, "https://workspace.exventure.co.kr");
-  if (!/^\/(?:$|roadmap(?:\/|$)|workspace(?:\/|$)|research$)/.test(url.pathname) || /\/(?:auth|login|oauth|accounts|account)(?:\/|$)/.test(url.pathname)) return "/";
+  if (!allowed.test(url.pathname) || /\/(?:auth|login|oauth|accounts|account)(?:\/|$)/.test(url.pathname)) return "/";
   if ([...url.searchParams.keys()].some(key => /token|code|state|redirect|next|return/i.test(key))) return "/";
   return url.pathname + url.search;
 }

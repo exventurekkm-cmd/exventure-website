@@ -48,6 +48,11 @@ async function fixture(t, local = false, metadataOverrides = {}, subject = actor
     return Response.json({ access_token: 'synthetic-central-token', token_type: 'Bearer', expires_in: variant.expiresIn ?? 3600, ...(variant.missingIdToken ? {} : { id_token: idToken }) });
   };
   const fetcher = async (url, options) => {
+    if (url === `${cfg.portal}/api/identity/sign-out`) {
+      assert.equal(options.method, 'POST');
+      assert.equal(options.headers.Authorization, 'Bearer synthetic-central-token');
+      return Response.json({signed_out:true});
+    }
     stats.permissionChecks++;
     assert.equal(url, `${cfg.portal}/api/identity/access?application=exventure-website`);
     assert.equal(options.cache, 'no-store'); assert.equal(options.redirect, 'error');
@@ -198,9 +203,25 @@ test('logout requires same-origin POST and removes the server session before cle
   const session=cookiePair(response.headers.getSetCookie()[1]),hash=sessionHash(session.split('=')[1]);
   assert.equal((await handleCompanyLogout(mutation('/auth/company/logout',{},session,'https://other.example.invalid'),f.deps)).status,403);
   assert.ok(await f.store.readSession(hash));
+  const unavailable = await handleCompanyLogout(mutation('/auth/company/logout',{},session),{
+    ...f.deps,fetcher:async()=>new Response(null,{status:503}),
+  });
+  assert.equal(unavailable.status,503);
+  assert.ok(await f.store.readSession(hash));
   const result=await handleCompanyLogout(mutation('/auth/company/logout',{},session),f.deps);
+  assert.deepEqual(await result.json(),{ok:true,company_signed_out:true});
   assert.equal(result.status,200);assert.equal(await f.store.readSession(hash),null);assert.ok(result.headers.getSetCookie().every(value=>value.includes('Max-Age=0')));
   assert.equal(await authorizeWebsiteSession(session,f.cfg,f.store,f.fetcher),null);
+});
+test('an inactive administrator session hands off to the account portal without claiming global logout', async t => {
+  const f = await fixture(t), start = await f.start();
+  const callbackResult = await handleCompanyCallback(callback(start.authorization,start.header),f.deps);
+  const session = cookiePair(callbackResult.headers.getSetCookie()[1]);
+  const response = await handleCompanyLogout(mutation('/auth/company/logout',{},session), {
+    ...f.deps, fetcher:async () => new Response(null,{status:401}),
+  });
+  assert.deepEqual(await response.json(),{ok:true,company_signed_out:false,confirmation_url:new URL('/logout',f.cfg.portal).href});
+  assert.equal(await f.store.readSession(sessionHash(session.split('=')[1])),null);
 });
 test('invalid/duplicate cookies, expired server sessions and central HTTP denial cannot access protected data',async t=>{
   const f=await fixture(t),start=await f.start();const response=await handleCompanyCallback(callback(start.authorization,start.header),f.deps);
