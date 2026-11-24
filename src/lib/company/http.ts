@@ -4,7 +4,7 @@ import { validAdminMutation } from "../inquiries/admin-http.ts";
 import type { CompanyConfig } from "./config.ts";
 import { exchangeCompanyCode } from "./oidc.ts";
 import { localIntegration, localIntegrationRequestUrl } from "../local-integration.ts";
-import { loginCookie, sessionCookie, newSessionId, openCompanyData, readCookie, sealCompanyData, sessionHash, uuidPattern, type LoginAttempt, type WebsiteSessionStore } from "./contract.ts";
+import { loginCookie, sessionCookie, newSessionId, openCompanyData, readCookie, sealCompanyData, sessionHash, uuidPattern, type CompanySession, type LoginAttempt, type WebsiteSessionStore } from "./contract.ts";
 
 export type CompanyDependencies = { config: CompanyConfig | null; client: () => Promise<oidc.Configuration>; store: WebsiteSessionStore; fetcher?: typeof fetch; now?: () => number; log?: (event: string) => void };
 const headers = () => new Headers({ "Cache-Control": "private, no-store", "Vary": "Cookie", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" });
@@ -62,9 +62,25 @@ export async function handleCompanyLogout(request: Request, deps: CompanyDepende
   if (!config) return localError("홈페이지 관리자 인증을 준비하고 있습니다.");
   if (!validAdminMutation(request, config.origin, config.localIntegration === true, config.localIntegration === true)) return localError("관리자 화면에서 다시 시도해주세요.", 403);
   try {
+    let companySignedOut = false;
     const id = readCookie(request.headers.get("cookie"), sessionCookie);
-    if (id && /^[a-f0-9]{64}$/.test(id)) await deps.store.deleteSession(sessionHash(id));
+    if (id && /^[a-f0-9]{64}$/.test(id)) {
+      const hash = sessionHash(id);
+      const stored = await deps.store.readSession(hash);
+      if (stored) {
+        const session = openCompanyData<CompanySession>(stored, config.key, "session", (deps.now ?? Date.now)());
+        const central = await (deps.fetcher ?? fetch)(`${config.portal}/api/identity/sign-out`, {
+          method: "POST", headers: { Authorization: `Bearer ${session.accessToken}` },
+          cache: "no-store", redirect: "error", signal: AbortSignal.timeout(10000),
+        });
+        companySignedOut = central.ok && (await central.json()).signed_out === true;
+        if (!companySignedOut && ![401, 403].includes(central.status))
+          throw new Error("company_logout_unavailable");
+      }
+      await deps.store.deleteSession(hash);
+    }
     const h = headers(); h.append("Set-Cookie", cookie(sessionCookie, "", "/", 0, config.localIntegration === true)); h.append("Set-Cookie", clearAttempt(config));
-    return Response.json({ ok: true }, { headers: h });
+    return Response.json({ ok: true, company_signed_out: companySignedOut,
+      ...(!companySignedOut && { confirmation_url: new URL("/logout", config.portal).href }) }, { headers: h });
   } catch { deps.log?.("website_company_logout_unavailable"); return localError("로그아웃을 확인하지 못했습니다. 다시 시도해주세요."); }
 }
