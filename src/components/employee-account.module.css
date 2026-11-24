@@ -3,9 +3,13 @@
 .menu summary::-webkit-details-marker { display: none; }
 .menu summary::after { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); }
 .menu[open] summary::after { transform: translateY(2px) rotate(225deg); }
-/* The public page content sits at 60 below the mobile navigation. */
-:global(.editorial-site) :global(.site-topbar):has(.menu[open]) { overflow: visible; z-index: 61; }
 .links { position: absolute; right: 0; top: calc(100% + 6px); width: min(220px, calc(100vw - 32px)); padding: 6px; background: white; color: #242c33; border: 1px solid #dfe3e7; border-radius: 8px; box-shadow: 0 8px 24px #151c2424; }
 .links a, .links button { display: block; width: 100%; padding: 10px 12px; border: 0; border-radius: 4px; background: transparent; color: inherit; font: inherit; font-size: 14px; text-align: left; text-decoration: none; cursor: pointer; }
 .links a:hover, .links button:hover { background: #fff3ea; color: #9f3609; }
 .links p { margin: 4px 8px; font-size: 13px; }
+
+@media (max-width: 760px) {
+  :global(.menu-list) .menu summary { justify-content: flex-start; gap: 10px; }
+  :global(.menu-list) .links { position: static; width: 100%; margin-block: 4px; }
+  :global(.menu-list) .links a, :global(.menu-list) .links button { color: #242c33; border: 0; padding: 10px 12px; }
+}

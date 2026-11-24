@@ -13,12 +13,12 @@ export const companyProfile = {
 } as const;
 
 export const companyPrograms = [
-  { step: "01", name: "기업 발굴", subtitle: "가능성의 발견", description: "자체 모집, 대학 경진대회와 협력 네트워크를 통해 창업기업을 발굴합니다.", items: ["창업기업 모집·발굴", "성장 단계와 지원 수요 파악"] },
-  { step: "02", name: "Skill UP", subtitle: "창업의 기본기", description: "사업의 기초를 다지고, 비즈니스 모델과 검증할 가설을 구체화합니다.", items: ["IP·재무·마케팅·BM 교육", "사업타당성 가설·지표 설정"] },
-  { step: "03", name: "Build UP", subtitle: "함께 만드는 역량", description: "맞춤형 팀빌딩과 실전 프로그램으로 아이디어를 실행할 역량을 기릅니다.", items: ["해커톤·메이커톤", "팀빌딩·컴퍼니빌더형 지원"] },
-  { step: "04", name: "Make UP", subtitle: "제품과 사업의 구체화", description: "기술컨설팅과 MVP 제작 지원을 통해 제품을 구체화하고 IR을 준비합니다.", items: ["기술컨설팅·MVP 제작 지원", "IR 자료·발표 준비"] },
-  { step: "05", name: "Show UP", subtitle: "시장에서의 검증", description: "시장 검증 결과를 바탕으로 비즈니스 모델을 다듬고 사업을 설명합니다.", items: ["시장 검증·BM 재정립", "데모데이·피칭"] },
-  { step: "06", name: "해외 진출", subtitle: "더 넓은 시장으로", description: "목표 시장에 맞는 전략과 네트워크를 연결해 해외 진출을 준비합니다.", items: ["해외 진출 전략·박람회 지원", "바이어 상담·글로벌 네트워크 연결"] },
+  { step: "01", slug: "discover", field: "education", label: "기업 발굴", photo: "teamwork", name: "기업 발굴", subtitle: "가능성의 발견", description: "자체 모집, 대학 경진대회와 협력 네트워크를 통해 창업기업을 발굴합니다.", items: ["창업기업 모집·발굴", "성장 단계와 지원 수요 파악"] },
+  { step: "02", slug: "skill", field: "education", label: "창업 교육·멘토링", photo: "workshop", name: "Skill UP", subtitle: "창업의 기본기", description: "사업의 기초를 다지고, 비즈니스 모델과 검증할 가설을 구체화합니다.", items: ["IP·재무·마케팅·BM 교육", "사업타당성 가설·지표 설정"] },
+  { step: "03", slug: "build", field: "education", label: "팀빌딩·해커톤", photo: "planning", name: "Build UP", subtitle: "함께 만드는 역량", description: "맞춤형 팀빌딩과 실전 프로그램으로 아이디어를 실행할 역량을 기릅니다.", items: ["해커톤·메이커톤", "팀빌딩·컴퍼니빌더형 지원"] },
+  { step: "04", slug: "make", field: "product", label: "제품 개발·IR", photo: "prototype", name: "Make UP", subtitle: "제품과 사업의 구체화", description: "기술컨설팅과 MVP 제작 지원을 통해 제품을 구체화하고 IR을 준비합니다.", items: ["기술컨설팅·MVP 제작 지원", "IR 자료·발표 준비"] },
+  { step: "05", slug: "show", field: "product", label: "시장 검증·데모데이", photo: "presentation", name: "Show UP", subtitle: "시장에서의 검증", description: "시장 검증 결과를 바탕으로 비즈니스 모델을 다듬고 사업을 설명합니다.", items: ["시장 검증·BM 재정립", "데모데이·피칭"] },
+  { step: "06", slug: "global", field: "global", label: "해외 진출", photo: "global", name: "해외 진출", subtitle: "더 넓은 시장으로", description: "목표 시장에 맞는 전략과 네트워크를 연결해 해외 진출을 준비합니다.", items: ["해외 진출 전략·박람회 지원", "바이어 상담·글로벌 네트워크 연결"] },
 ] as const;
 
 export const companyHistory = [

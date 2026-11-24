@@ -1,66 +1,62 @@
 "use client";
-import { NavigationLink as Link } from "@/components/navigation-link";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Brand } from "@/components/brand";
-import { EmployeeAccount } from "./employee-account";
 
-const publicNavigation = [
-  { href: "/", label: "홈", path: "M3 10l9-7 9 7v11h-6v-7H9v7H3Z" },
-  { href: "/about", label: "회사 소개", path: "M4 21V5h10v16M14 10h6v11M8 9h2m-2 4h2m-2 4h2" },
-  { href: "/business", label: "사업 영역", path: "M4 8h16v12H4ZM8 8V4h8v4M4 13h16" },
-  { href: "/activities", label: "주요 활동", path: "M4 5h16v15H4ZM8 9h8m-8 4h8m-8 4h5" },
-  { href: "/about#company-history", label: "연혁", path: "M5 3h14v18H5ZM9 7h6m-6 5h6m-6 5h4" },
-  { href: "/tools", label: "창업지원 도구", path: "M4 4h16v16H4ZM8 8h8m-8 4h8m-8 4h4" },
-  { href: "/contact", label: "문의", path: "M3 5h18v14H3ZM3 5l9 7 9-7" },
-] as const;
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { navigation } from "@/lib/site";
+import { EmployeeAccount } from "./employee-account";
+import { Brand } from "./brand";
 
 export function SiteHeader() {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const [hash, setHash] = useState("");
-  const toggle = useRef<HTMLButtonElement>(null);
+  const path = usePathname();
+  const menu = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
-    const sync = () => { setOpen(false); setHash(window.location.hash); };
-    sync();
-    window.addEventListener("hashchange", sync);
-    window.addEventListener("popstate", sync);
-    window.addEventListener("pageshow", sync);
-    return () => {
-      window.removeEventListener("hashchange", sync);
-      window.removeEventListener("popstate", sync);
-      window.removeEventListener("pageshow", sync);
+    const current = menu.current;
+    if (!current) return;
+    const close = () => { current.open = false; };
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !current.contains(event.target)) close();
     };
-  }, [pathname]);
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
-    return () => { document.documentElement.style.overflow = previous; };
-  }, [open]);
-  useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 961px)");
-    const close = () => setOpen(false);
+    const desktop = matchMedia("(min-width:761px)");
+    close();
     desktop.addEventListener("change", close);
-    return () => desktop.removeEventListener("change", close);
-  }, []);
-  const historyActive = pathname === "/about" && (hash === "#company-history" || hash.startsWith("#history-"));
-  const currentHref = pathname.startsWith("/activities") ? "/activities" : historyActive ? "/about#company-history" : pathname;
-  const closeAndFocus = () => { setOpen(false); toggle.current?.focus(); };
-  return <>
-    <header className="site-header" data-open={open} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }} onKeyDown={event => { if (event.key === "Escape" && open) { setOpen(false); toggle.current?.focus(); } }}>
-      <Link className="site-brand" href="/" aria-label="엑스벤처 홈페이지" onClick={() => setOpen(false)}><Brand tone="dark" /></Link>
-      <button ref={toggle} className="site-menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(value => !value)}>{open ? "메뉴 닫기" : "메뉴 열기"}<span className="menu-glyph" aria-hidden="true"><i /><i /></span></button>
-      <nav id="site-navigation" aria-label="주 메뉴">{publicNavigation.map(item => <Link key={item.href} href={item.href} aria-current={currentHref === item.href ? "page" : undefined} onClick={() => setOpen(false)}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d={item.path} /></svg>{item.label}</Link>)}</nav>
-      <div className="site-manifesto"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="768px" /></div>
-      <div className="site-rail-footer"><Link href="/" aria-label="엑스벤처 홈으로"><Brand tone="dark" /></Link><small>© EXVENTURE<br />All rights reserved.</small></div>
-    </header>
-    {open && <button type="button" className="mobile-menu-backdrop" tabIndex={-1} aria-label="메뉴 바깥 영역 닫기" onPointerDown={event => event.preventDefault()} onClick={closeAndFocus} />}
-    <div className="site-topbar"><div className="topbar-industrial" aria-hidden="true"><Image src="/brand/exventure-industrial-v1.png" alt="" fill sizes="360px" /></div><EmployeeAccount /></div>
-  </>;
+    window.addEventListener("pageshow", close);
+    document.addEventListener("pointerdown", outside);
+    return () => {
+      desktop.removeEventListener("change", close);
+      window.removeEventListener("pageshow", close);
+      document.removeEventListener("pointerdown", outside);
+    };
+  }, [path]);
+  const links = navigation.map(item => {
+    const section = path.startsWith(item.href + "/") || (item.href === "/activities" && path === "/news");
+    return <Link key={item.href} href={item.href} aria-current={path === item.href ? "page" : section ? "true" : undefined}>{item.label}</Link>;
+  });
+  return <header className="mast" id="site-header"><div className="wrap mast-inner">
+    <Link className="wordmark" href="/" aria-label="엑스벤처 홈"><Brand tone="dark" /></Link>
+    <nav className="main-nav" aria-label="주 메뉴">{links}</nav>
+    <div className="mast-actions">
+      <Link className="action small" href="/contact" aria-current={path === "/contact" ? "page" : undefined}>프로젝트 문의</Link>
+      <div className="account-desktop"><EmployeeAccount /></div>
+      <details className="mobile-menu" ref={menu}
+        onBlur={e => { if (e.relatedTarget instanceof Node && !e.currentTarget.contains(e.relatedTarget)) e.currentTarget.open = false; }}
+        onKeyDown={e => {
+          if (e.key === "Escape" && !e.defaultPrevented) {
+            e.currentTarget.open = false;
+            e.currentTarget.querySelector("summary")?.focus();
+          }
+        }}>
+        <summary aria-label="전체 메뉴"><span className="menu-lines" aria-hidden="true" />메뉴</summary>
+        <nav className="menu-list" aria-label="전체 메뉴" onClick={e => {
+          if (e.target instanceof Element && e.target.closest("a") && menu.current) menu.current.open = false;
+        }}>
+          <Link href="/" aria-current={path === "/" ? "page" : undefined}>홈</Link>{links}
+          <Link href="/about#company-history">연혁</Link><Link href="/contact">문의</Link>
+          <EmployeeAccount />
+        </nav>
+      </details>
+    </div>
+  </div></header>;
 }
 
-export function SkipLink() {
-  return <a className="skip-link" href="#main" onClick={event => { const main = document.getElementById("main"); if (main) { event.preventDefault(); main.focus(); main.scrollIntoView({ block: "start" }); } }}>본문으로 이동</a>;
-}
+export function SkipLink() { return <a className="skip" href="#main">본문으로 이동</a>; }
