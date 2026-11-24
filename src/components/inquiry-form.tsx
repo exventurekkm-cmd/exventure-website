@@ -1,17 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { inquiryKinds, validateInquiry, type FieldErrors, type InquiryField, type InquiryPolicy, type InquiryResponse } from "@/lib/inquiries/contract";
+import { findInterest, interestPrefix } from "@/lib/explore";
+import { InterestOptions } from "./interest-select";
+import { validateInquiry, type FieldErrors, type InquiryField, type InquiryPolicy, type InquiryResponse } from "@/lib/inquiries/contract";
 
-export function InquiryForm({ policy, token, testOnly }: { policy: InquiryPolicy; token: string; testOnly: boolean }) {
-  const [fields, setFields] = useState({ name: "", email: "", organization: "", kind: "", message: "" });
+export function InquiryForm({ policy, token, testOnly, initialInterest }: { initialInterest?: string; policy: InquiryPolicy; token: string; testOnly: boolean }) {
+  const [fields, setFields] = useState({ name: "", email: "", organization: "", kind: initialInterest ?? "", message: "" });
+  const selectedInterest = findInterest(fields.kind);
+  const prefix = interestPrefix(selectedInterest);
+  const limit = 3000 - prefix.length;
   const [consent, setConsent] = useState(false), [organizationConsent, setOrganizationConsent] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({}), [notice, setNotice] = useState("");
   const [pending, setPending] = useState(false), [reference, setReference] = useState("");
   const form = useRef<HTMLFormElement>(null), summary = useRef<HTMLDivElement>(null), receipt = useRef<HTMLHeadingElement>(null);
   useEffect(() => { if (notice) summary.current?.focus(); }, [notice, errors]);
   useEffect(() => { if (reference) receipt.current?.focus(); }, [reference]);
-  const labels: Record<InquiryField, string> = { name: "이름", email: "회신 이메일", organization: "회사·기관명", kind: "문의 종류", message: "문의 내용", consent: "개인정보 동의" };
+  const labels: Record<InquiryField, string> = { name: "이름", email: "회신 이메일", organization: "회사·기관명", kind: "관심 분야", message: "문의 내용", consent: "개인정보 동의" };
   const update = (field: keyof typeof fields, value: string) => setFields(current => ({ ...current, [field]: value }));
   const describedBy = (field: InquiryField, hint?: string) => [hint, errors[field] ? `${field}-error` : ""].filter(Boolean).join(" ") || undefined;
   const fieldError = (field: InquiryField) => errors[field] ? <p id={`${field}-error`} className="contact-field-error">{errors[field]}</p> : null;
@@ -21,13 +26,17 @@ export function InquiryForm({ policy, token, testOnly }: { policy: InquiryPolicy
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending) return;
-    const input = { ...fields, organization: organizationConsent ? fields.organization : "", organizationConsent, consent, token, website: String(new FormData(event.currentTarget).get("website") ?? "") };
+    const input = { ...fields, kind: selectedInterest?.kind ?? "", organization: organizationConsent ? fields.organization : "", organizationConsent, consent, token, website: String(new FormData(event.currentTarget).get("website") ?? "") };
     const validation = validateInquiry(input);
     if (!validation.ok) { showError("입력 내용을 확인해주세요.", validation.errors); return; }
+    if (validation.inquiry.message.length > limit) {
+      showError("문의 내용을 확인해주세요.", { message: "선택한 분야에서는 " + limit.toLocaleString("ko-KR") + "자까지 입력할 수 있습니다." });
+      return;
+    }
     setPending(true); setErrors({}); setNotice("");
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 20_000);
     try {
-      const response = await fetch("/api/inquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...validation.inquiry, token, website: "" }), signal: controller.signal, cache: "no-store", credentials: "same-origin" });
+      const response = await fetch("/api/inquiries", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...validation.inquiry, message: prefix + validation.inquiry.message, token, website: "" }), signal: controller.signal, cache: "no-store", credentials: "same-origin" });
       const result: InquiryResponse = await response.json();
       if (!response.ok || !result.ok) { showError(result.ok ? "접수 여부를 확인하지 못했습니다. 같은 내용을 다시 제출해주세요." : result.message, result.ok ? {} : result.fieldErrors); return; }
       setReference(result.reference);
@@ -43,7 +52,7 @@ export function InquiryForm({ policy, token, testOnly }: { policy: InquiryPolicy
     <button type="button" className="button primary" onClick={() => window.location.reload()}>새 문의 작성 </button>
   </section>;
   return <form ref={form} onSubmit={submit} noValidate className="contact-form" aria-busy={pending}>
-    <p className="contact-required-note">이름·회신 이메일·문의 종류·내용과 개인정보 동의는 필수입니다.</p>
+    <p className="contact-required-note">이름·회신 이메일·관심 분야·내용과 개인정보 동의는 필수입니다.</p>
     {notice && <div className="contact-error-summary" role="alert" ref={summary} tabIndex={-1}>
       <p>{notice}</p>
       {Object.keys(errors).length > 0 && <ul>{(Object.keys(errors) as InquiryField[]).map(field => <li key={field}><a href={`#inquiry-${field}`} onClick={event => { event.preventDefault(); form.current?.querySelector<HTMLElement>(`#inquiry-${field}`)?.focus(); }}>{labels[field]}: {errors[field]}</a></li>)}</ul>}
@@ -58,8 +67,8 @@ export function InquiryForm({ policy, token, testOnly }: { policy: InquiryPolicy
     </fieldset>
     <fieldset disabled={pending} className="contact-group">
       <legend><span aria-hidden="true">02</span> 문의 내용</legend>
-      <div className="contact-field"><label htmlFor="inquiry-kind">문의 종류 <span className="contact-hint">(필수)</span></label><select id="inquiry-kind" name="kind" value={fields.kind} onChange={e => update("kind", e.target.value)} required aria-invalid={!!errors.kind} aria-describedby={describedBy("kind")}><option value="">선택해주세요</option>{inquiryKinds.map(kind => <option value={kind.value} key={kind.value}>{kind.label}</option>)}</select>{fieldError("kind")}</div>
-      <div className="contact-field"><label htmlFor="inquiry-message">문의 내용 <span className="contact-hint">(필수)</span></label><textarea id="inquiry-message" name="message" value={fields.message} onChange={e => update("message", e.target.value)} rows={7} minLength={10} maxLength={3000} required aria-invalid={!!errors.message} aria-describedby={describedBy("message", "message-hint message-count")} /><div className="contact-message-help"><p id="message-hint" className="contact-hint">10~3,000자. 민감정보·주민등록번호·타인의 개인정보는 입력하지 마세요.</p><span id="message-count" className="contact-hint">{fields.message.length.toLocaleString()} / 3,000</span></div>{fieldError("message")}</div>
+      <div className="contact-field"><label htmlFor="inquiry-kind">관심 분야 <span className="contact-hint">(필수)</span></label><select id="inquiry-kind" name="kind" value={fields.kind} onChange={e => update("kind", e.target.value)} required aria-invalid={!!errors.kind} aria-describedby={describedBy("kind")}><InterestOptions placeholder /></select>{fieldError("kind")}</div>
+      <div className="contact-field"><label htmlFor="inquiry-message">문의 내용 <span className="contact-hint">(필수)</span></label><textarea id="inquiry-message" name="message" value={fields.message} onChange={e => update("message", e.target.value)} rows={7} minLength={10} maxLength={limit} required aria-invalid={!!errors.message} aria-describedby={describedBy("message", "message-hint message-count")} /><div className="contact-message-help"><p id="message-hint" className="contact-hint">10~{limit.toLocaleString("ko-KR")}자. 민감정보·주민등록번호·타인의 개인정보는 입력하지 마세요.</p><span id="message-count" className="contact-hint">{fields.message.length.toLocaleString("ko-KR")} / {limit.toLocaleString("ko-KR")}</span></div>{fieldError("message")}</div>
     </fieldset>
     <fieldset disabled={pending} className="contact-group">
       <legend><span aria-hidden="true">03</span> 개인정보 수집·이용</legend>

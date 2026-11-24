@@ -1,150 +1,74 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { companyHistory, companyProfile } from "@/lib/company-profile";
+import { companyHistory } from "@/lib/company-profile";
 import { publicActivities } from "@/lib/public-activities";
-import { historyRecordId } from "@/lib/public-navigation";
+import { activityRowId, historyRecordId } from "@/lib/public-navigation";
+import { ActivityRows } from "./explore-parts";
 
-export function CompanyHistoryDirectory() {
-  const [query, setQuery] = useState(""),
-    [year, setYear] = useState("");
+export function RecordDirectory({ history = false }: { history?: boolean }) {
+  const records = history ? companyHistory : publicActivities;
+  const noun = history ? "이력" : "활동";
+  const yearLabel = history ? "history-year" : "activity-year";
+  const storeKey = "exventure:public-" + (history ? "history" : "activities");
+  const [query, setQuery] = useState(""), [year, setYear] = useState("");
   const [ready, setReady] = useState(false);
-  const saveState = () => {
-    if (!ready) return;
-    const open = Array.from(document.querySelectorAll<HTMLLIElement>(".company-history > li")).filter(item => item.querySelector("details")?.open).map(item => item.id);
-    try { sessionStorage.setItem("exventure:public-history", JSON.stringify({ query, year, open, scrollY: window.scrollY, hash: window.location.hash })); } catch { /* Browsing still works when storage is unavailable. */ }
-  };
+
   useEffect(() => {
-    let frame = 0;
-    let saved: { query?: unknown; year?: unknown; open?: unknown; scrollY?: unknown; hash?: unknown } = {};
-    try { saved = JSON.parse(sessionStorage.getItem("exventure:public-history") ?? "{}"); } catch { /* Use the visible default list. */ }
-    setQuery(typeof saved?.query === "string" ? saved.query.slice(0, 200) : "");
-    setYear(typeof saved?.year === "string" && companyHistory.some(item => item.date.slice(0, 4) === saved.year) ? saved.year : "");
+    let previous: {query?: string; year?: string} = {};
+    try { previous = JSON.parse(sessionStorage.getItem(storeKey) || "{}") || {}; } catch { /* Optional search state. */ }
+    setQuery(typeof previous.query === "string" ? previous.query.slice(0, 200) : "");
+    setYear(records.some(row => row.date.slice(0, 4) === previous.year) ? previous.year! : "");
     setReady(true);
-    const savedOpen = Array.isArray(saved?.open) ? saved.open.filter((id): id is string => typeof id === "string" && companyHistory.some(item => historyRecordId(item.date) === id)) : [];
-    frame = requestAnimationFrame(() => { frame = requestAnimationFrame(() => {
-      savedOpen.forEach(id => { const details = document.getElementById(id)?.querySelector("details"); if (details) details.open = true; });
-      const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-      if (navigation?.type === "back_forward" && saved?.hash === window.location.hash && typeof saved?.scrollY === "number" && Number.isFinite(saved.scrollY)) window.scrollTo({ top: saved.scrollY, behavior: "auto" });
-    }); });
-    const revealRecord = () => {
-      const id = window.location.hash.slice(1);
-      if (!companyHistory.some(item => historyRecordId(item.date) === id)) return;
+    let frame = 0;
+    function openAnchor() {
+      const id = location.hash.slice(1);
+      const record = history ? companyHistory.find(row => historyRecordId(row.date) === id)
+        : publicActivities.find(row => activityRowId(row.slug) === id);
+      if (!record) return;
       setQuery(""); setYear("");
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => { frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
         const target = document.getElementById(id);
-        const details = target?.querySelector("details");
-        if (details) details.open = true;
-        target?.scrollIntoView({ block: "start" });
-        target?.focus({ preventScroll: true });
-      }); });
-    };
-    revealRecord();
-    window.addEventListener("hashchange", revealRecord);
-    window.addEventListener("popstate", revealRecord);
-    window.addEventListener("pageshow", revealRecord);
+        target?.scrollIntoView({block: "start"}); target?.focus({preventScroll:true});
+      });
+    }
+    openAnchor();
+    window.addEventListener("hashchange", openAnchor);
+    window.addEventListener("pageshow", openAnchor);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("hashchange", revealRecord);
-      window.removeEventListener("popstate", revealRecord);
-      window.removeEventListener("pageshow", revealRecord);
+      window.removeEventListener("hashchange", openAnchor);
+      window.removeEventListener("pageshow", openAnchor);
     };
-  }, []);
+  }, [storeKey, history, records]);
   useEffect(() => {
-    saveState();
-    window.addEventListener("pagehide", saveState);
-    return () => window.removeEventListener("pagehide", saveState);
-  }, [query, year, ready]);
-  const terms = query.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
-  const visible = companyHistory.filter(
-    (item) =>
-      (!year || item.date.startsWith(year)) &&
-      terms.every((term) =>
-        `${item.title} ${item.organization}`.toLocaleLowerCase().includes(term),
-      ),
-  );
-  return (
-    <div className="history-directory">
-      <div className="history-controls">
-        <label>
-          <span>사업명·기관 검색</span>
-          <input
-            type="search"
-            value={query}
-            maxLength={200}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="교육, 컨설팅 또는 기관명"
-          />
-        </label>
-        <label>
-          <span>기준 연도</span>
-          <select value={year} onChange={(e) => setYear(e.target.value)}>
-            <option value="">전체 연도</option>
-            {[
-              ...new Set(companyHistory.map((item) => item.date.slice(0, 4))),
-            ].map((value) => (
-              <option key={value} value={value}>
-                {value}년
-              </option>
-            ))}
-          </select>
-        </label>
-        <button
-          type="button"
-          className="history-reset"
-          disabled={!query && !year}
-          onClick={() => {
-            setQuery("");
-            setYear("");
-          }}
-        >
-          조건 초기화
-        </button>
-      </div>
-      <p className="history-result" role="status">
-        {year || "전체 연도"} · {query ? `‘${query}’ 검색` : "검색 조건 없음"} ·{" "}
-        {visible.length} / {companyHistory.length}개 이력
-      </p>
-      <ol className="company-history">
-        {visible.map(item => {
-          const activity = publicActivities.find(activity => activity.title === item.title && activity.date === item.date);
-          return (
-          <li key={item.date + item.title} id={historyRecordId(item.date)} tabIndex={-1}>
-            <time dateTime={item.date.replace(".", "-")}>{item.date}</time>
-            <details onToggle={saveState}>
-              <summary>
-                {item.title}
-                <span aria-hidden="true">+</span>
-              </summary>
-              {item.organization && (
-                <p className="history-organization">{item.organization}</p>
-              )}
-              <p className="company-source">
-                {companyProfile.sourceLabel} · 주요 이력
-              </p>
-              {activity && <Link className="editorial-link" href={"/activities/"+activity.slug} onClick={saveState}>활동 기록 보기 </Link>}
-              <Link className="editorial-link" href="/contact" onClick={saveState}>문의 안내 </Link>
-            </details>
-          </li>
-        );})}
-      </ol>
-      {!visible.length && (
-        <div className="history-empty">
-          <h3>조건에 맞는 이력이 없습니다.</h3>
-          <p>검색어를 바꾸거나 연도 조건을 초기화해 주세요.</p>
-          <button
-            type="button"
-            className="history-reset"
-            onClick={() => {
-              setQuery("");
-              setYear("");
-            }}
-          >
-            전체 이력 보기
-          </button>
-        </div>
-      )}
+    if (ready) try { sessionStorage.setItem(storeKey, JSON.stringify({query, year})); } catch { /* A blocked store does not affect search. */ }
+  }, [ready, query, year, storeKey]);
+
+  const keywords = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+  const matches = (row: { date: string; title: string; organization: string }) =>
+    (!year || row.date.startsWith(year)) && keywords.every(word => (row.title + " " + row.organization).toLocaleLowerCase().includes(word));
+  const visible = records.filter(matches);
+  const reset = () => { setQuery(""); setYear(""); };
+  return <div>
+    <div className="filterbar" hidden={!ready}>
+      <label><span>사업명·기관 검색</span><input type="search" maxLength={200} placeholder="사업명 또는 기관명" value={query} onChange={e => setQuery(e.target.value)} /></label>
+      <label><span id={yearLabel}>연도</span><select aria-labelledby={yearLabel} value={year} onChange={e => setYear(e.target.value)}><option value="">전체 연도</option>
+        {[...new Set(records.map(row => row.date.slice(0,4)))].map(y => <option value={y} key={y}>{y}년</option>)}</select></label>
+      <button type="button" className="subtle" onClick={reset} disabled={!year && !query}>초기화</button>
     </div>
-  );
+    <p className="search-status" role="status">{noun} {visible.length}건</p>
+    {history ? <ol className="history-list">{visible.map(row => {
+      const activity = publicActivities.find(a => a.date === row.date);
+      return <li key={row.date} id={historyRecordId(row.date)} tabIndex={-1}>
+        <time dateTime={row.date.replace(".", "-")}>{row.date}</time><div>
+        {activity ? <Link href={"/activities/" + activity.slug}>{row.title}</Link> : <strong>{row.title}</strong>}
+        {row.organization && <p>{row.organization}</p>}</div>
+      </li>;
+    })}</ol> : <div id="activity-list"><ActivityRows records={publicActivities.filter(matches)} /></div>}
+    {visible.length === 0 && <div className="empty-result"><p>조건에 맞는 {history ? "이력이" : "활동이"} 없습니다.</p>
+      <button type="button" className="secondary" onClick={reset}>전체 {noun} 보기</button></div>}
+  </div>;
 }

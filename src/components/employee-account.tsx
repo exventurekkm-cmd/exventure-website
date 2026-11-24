@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { accountUrl } from "@/lib/site";
 import { CompanyLogoutButton } from "./company-logout-button";
 import styles from "./employee-account.module.css";
 
-export function EmployeeAccount() {
-  const [account, setAccount] = useState<{ name: string; portal: string } | null>(null);
-  const menu = useRef<HTMLDetailsElement>(null);
+type Account = { name: string; portal: string };
+const AccountContext = createContext<Account | null>(null);
+
+export function EmployeeSession({ children }: { children: ReactNode }) {
+  const [account, setAccount] = useState<Account | null>(null);
   useEffect(() => {
     const origin = window.location.origin;
     const portal = origin === "https://exventure.co.kr" ? "https://accounts.exventure.co.kr"
@@ -25,25 +27,41 @@ export function EmployeeAccount() {
         if (!request.signal.aborted) setAccount(typeof data?.name === "string" && data.name ? { name: data.name, portal } : null);
       } catch { if (!request.signal.aborted) setAccount(null); }
     }
-    function outside(event: PointerEvent) {
-      if (menu.current?.open && event.target instanceof Node && !menu.current.contains(event.target)) menu.current.open = false;
-    }
     void refresh();
     window.addEventListener("pageshow", refresh);
     window.addEventListener("focus", refresh);
     document.addEventListener("visibilitychange", refresh);
-    document.addEventListener("pointerdown", outside);
     return () => {
       current?.abort();
       window.removeEventListener("pageshow", refresh);
       window.removeEventListener("focus", refresh);
       document.removeEventListener("visibilitychange", refresh);
-      document.removeEventListener("pointerdown", outside);
     };
   }, []);
-  if (!account) return <a className="frame-login" href={accountUrl}>직원 로그인</a>;
+  return <AccountContext.Provider value={account}>{children}</AccountContext.Provider>;
+}
+
+export function AccountLink() {
+  const account = useContext(AccountContext);
+  return <a href={accountUrl}>{account ? "업무 홈" : "로그인"}</a>;
+}
+
+export function EmployeeAccount() {
+  const account = useContext(AccountContext);
+  const menu = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    function outside(event: PointerEvent) {
+      if (menu.current?.open && event.target instanceof Node && !menu.current.contains(event.target)) menu.current.open = false;
+    }
+    document.addEventListener("pointerdown", outside);
+    return () => document.removeEventListener("pointerdown", outside);
+  }, []);
+  if (!account) return <a className="frame-login" href={accountUrl}>로그인</a>;
   return <details ref={menu} className={styles.menu} onKeyDown={event => {
-    if (event.key === "Escape") { event.currentTarget.open = false; event.currentTarget.querySelector("summary")?.focus(); }
+    if (event.key === "Escape" && event.currentTarget.open) {
+      event.preventDefault(); event.stopPropagation();
+      event.currentTarget.open = false; event.currentTarget.querySelector("summary")?.focus();
+    }
   }} onBlur={event => {
     if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
   }}>

@@ -1,29 +1,37 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { companyProfile, companyPrograms } from "@/lib/company-profile";
+import { companyPrograms } from "@/lib/company-profile";
 import { publicActivities } from "@/lib/public-activities";
-import { activityListHref } from "@/lib/public-navigation";
+import { activityListHref, historyRecordHref } from "@/lib/public-navigation";
+import { programHref } from "@/lib/explore";
+import { Breadcrumb } from "@/components/explore-parts";
 
-export function generateStaticParams() { return publicActivities.map(item => ({ activity: item.slug })); }
-function findActivity(slug: string) {
-  const item = publicActivities.find(activity => activity.slug === slug);
-  if (!item) notFound();
-  return item;
+type Props = { params: Promise<{activity: string}> };
+async function readActivity({params}: Props) {
+  const {activity} = await params;
+  return publicActivities.find(a => a.slug === activity) ?? notFound();
 }
-export async function generateMetadata({ params }: { params: Promise<{ activity: string }> }): Promise<Metadata> {
-  const item = findActivity((await params).activity);
-  return { title: `${item.title} | 엑스벤처`, description: `${item.date} · ${item.title}. ${companyProfile.sourceLabel}에 수록된 주요 활동.` };
+export const dynamicParams = false;
+export function generateStaticParams() { return publicActivities.map(a => ({activity:a.slug})); }
+export async function generateMetadata(props: Props) {
+  const a = await readActivity(props);
+  return { title:a.title, description:a.date + " · " + a.organization };
 }
-export default async function ActivityPage({ params }: { params: Promise<{ activity: string }> }) {
-  const item = findActivity((await params).activity);
-  const program = companyPrograms.find(program => program.step === item.programStep)!;
-  const related = publicActivities.filter(activity => activity.slug !== item.slug);
-  return <main id="main" tabIndex={-1} className="activity-detail frame-main">
-    <nav className="frame-breadcrumb" aria-label="현재 위치"><Link href="/">홈</Link><span aria-hidden="true">›</span><Link href={activityListHref(item.slug)}>주요 활동</Link><span aria-hidden="true">›</span><span>활동 기록</span></nav>
-    <header className="detail-heading"><p className="frame-kicker">{item.category}</p><h1>{item.title}</h1><p className="detail-date"><time dateTime={item.date.replace(".", "-")}>{item.date}</time><span>{item.organization}</span></p></header>
-    <section className="detail-record" aria-labelledby="record-title"><h2 id="record-title">활동 기록</h2><dl><div><dt>프로그램</dt><dd>{item.title}</dd></div><div><dt>시기</dt><dd>{item.date}</dd></div><div><dt>기재 기관</dt><dd>{item.organization}</dd></div><div><dt>자료 기준</dt><dd>{companyProfile.sourceLabel} · 주요 이력</dd></div></dl></section>
-    <section className="detail-program" aria-labelledby="more-programs"><p className="frame-kicker">EXVENTURE PROGRAM</p><h2 id="more-programs">지원 프로그램도 살펴보세요.</h2><div><span className="program-mark">{program.step}</span><div><h3>{program.name}</h3><p>{program.description}</p><Link className="frame-link" href={`/business#program-${program.step}`}>프로그램 안내 </Link></div></div></section>
-    <nav id="related-activities" className="detail-next" aria-label="다른 활동"><Link className="frame-link" href={activityListHref(item.slug)}>활동 목록으로 </Link><div className="related-activities"><p>다른 활동</p>{related.map(activity => <Link key={activity.slug} href={`/activities/${activity.slug}`}><strong>{activity.title}</strong><span className="action-caption">기록 보기</span></Link>)}</div></nav>
+export default async function ActivityPage(props: Props) {
+  const a = await readActivity(props);
+  const [year, month] = a.date.split(".");
+  const program = companyPrograms.find(p => p.step === a.programStep);
+  const others = publicActivities.filter(other => other.slug !== a.slug && other.date.startsWith(year));
+  return <main id="main" tabIndex={-1}>
+    <header className="record-head"><div className="wrap"><Breadcrumb label="활동 기록" parent={{href:activityListHref(a.slug),label:"주요 활동"}} />
+      <div className="record-spread"><div className="calendar" aria-label="활동 시기"><span>{year}년</span><strong>{month}<small>월</small></strong></div>
+        <div className="record-heading"><h1>{a.title}</h1><p>{a.organization}</p></div></div>
+    </div></header>
+    <div className="wrap record-body">{program ? <section className="detail-band"><h2>관련 프로그램</h2>
+      <div className="related-offer"><h3><Link href={programHref(program)}>{program.label}</Link></h3><p>{program.description}</p><Link className="secondary" href={programHref(program)}>프로그램 안내</Link></div></section>
+    : <section className="detail-band"><h2>함께 볼 기록</h2><div className="reading-list">
+      {others.map(r => <Link href={"/activities/"+r.slug} key={r.slug}><strong>{r.title}</strong><time dateTime={r.date.replace(".","-")}>{r.date}</time></Link>)}
+    </div></section>}
+    <div className="back-line"><Link className="secondary" href={activityListHref(a.slug)}>활동 목록</Link><Link className="quiet-link" href={historyRecordHref(a.date)}>연혁에서 보기</Link></div></div>
   </main>;
 }

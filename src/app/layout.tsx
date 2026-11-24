@@ -1,32 +1,26 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import "@/styles/exventure.css";
-import "./globals.css";
-import "@/styles/industrial-site.css";
-import "@/styles/history-directory.css";
-import "@/styles/reference-site.css";
-import "@/styles/public-frame.css";
-import "@/styles/editorial-fonts.css";
-import "@/styles/editorial-site.css";
-import "@/styles/interaction.css";
-import "@/styles/public-refinement.css";
+import Link from "next/link";
 import { SiteHeader, SkipLink } from "@/components/site-header";
-import { ContentDirectory, CompanyContext } from "@/components/public-frame";
+import { AccountLink, EmployeeSession } from "@/components/employee-account";
+import { Brand } from "@/components/brand";
+import { companyProfile as company } from "@/lib/company-profile";
+import "@/styles/exventure.css";
+import "@/styles/editorial-fonts.css";
+import "@/styles/explore.css";
 
 export const metadata: Metadata = {
-  title: "엑스벤처 | EXVENTURE",
-  description: "창업 교육과 컨설팅, 시장 검증과 IR 준비, 글로벌 진출 지원으로 초기 기업의 성장을 함께하는 엑스벤처입니다.",
+  metadataBase: new URL("https://exventure.co.kr"),
+  title: { default: "엑스벤처 | 창업·사업화 프로그램", template: "%s | 엑스벤처" },
+  description: "엑스벤처의 창업 교육과 팀빌딩, 제품·시장 검증, 해외 진출 프로그램을 살펴보세요.",
   robots: { index: false, follow: false },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="ko"><body className="public-frame-site editorial-site">
-    <SkipLink />
-    <SiteHeader />
-    <div className="reference-shell">
-    <div className="public-frame-grid"><ContentDirectory /><div className="frame-content">{children}</div><CompanyContext /></div>
-    <footer className="site-footer">
-      <p>© 주식회사 엑스벤처</p><Link href="/privacy">개인정보 안내</Link>
-    </footer>
-    </div>
-  </body></html>;
+  return <html lang="ko"><body><EmployeeSession>
+    <SkipLink /><SiteHeader />{children}
+    <footer className="foot"><div className="wrap foot-row">
+      <div><Link className="wordmark" href="/" aria-label="엑스벤처 홈"><Brand tone="dark" /></Link><p>{company.name}</p></div>
+      <address><a href={"mailto:" + company.email}>{company.email}</a><a href={company.telephoneHref}>{company.telephone}</a></address>
+      <nav aria-label="하단 메뉴"><Link href="/about#company-history">연혁</Link><Link href="/privacy">문의 개인정보 안내</Link><AccountLink /></nav>
+    </div></footer>
+  </EmployeeSession></body></html>;
 }
