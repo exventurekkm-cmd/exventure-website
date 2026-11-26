@@ -5,7 +5,8 @@ import { inquirySettings } from "@/lib/inquiries/runtime";
 import { isTestInquiry } from "@/lib/inquiries/settings";
 import "@/styles/contact.css";
 
-export const metadata = { title: "문의 개인정보 안내" };
+import { pageMetadata } from "@/lib/share-metadata";
+export const metadata = pageMetadata("문의 개인정보 안내", "프로젝트 문의에 필요한 개인정보의 수집과 처리 기준을 확인하세요.", "/privacy");
 export const dynamic = "force-dynamic";
 export default async function PrivacyPage() {
   const settings = await inquirySettings();

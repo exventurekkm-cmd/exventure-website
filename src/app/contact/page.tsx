@@ -9,7 +9,8 @@ import { companyProfile as company } from "@/lib/company-profile";
 import { findInterest } from "@/lib/explore";
 import "@/styles/contact.css";
 
-export const metadata = { title: "프로젝트 문의", description: "기업 진단·사업화 지원, 시장 검증, 기관 협업에 관해 문의하세요." };
+import { pageMetadata } from "@/lib/share-metadata";
+export const metadata = pageMetadata("프로젝트 문의", "기업 진단·사업화 지원, 시장 검증, 기관 협업에 관해 문의하세요.", "/contact");
 export const dynamic = "force-dynamic";
 export default async function ContactPage({ searchParams }: { searchParams: Promise<{ interest?: string | string[] }> }) {
   const [settings, params] = await Promise.all([inquirySettings(), searchParams]);

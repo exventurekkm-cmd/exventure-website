@@ -343,3 +343,13 @@ form > .action { margin-top: 25px; }
 .form-surface .contact-checkbox input { width: 18px; height: 18px; min-height: 18px; flex: 0 0 18px; }
 .reading-copy h2 { margin-block: 28px 12px; }
 .reading-copy .contact-policy { margin-block: 22px; }
+
+.foot .public-share { display: grid; gap: 3px; align-items: start; max-width: 100%; }
+.foot .public-share button { min-height: 36px; width: fit-content; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; cursor: pointer; }
+.foot .public-share button:hover { color: white; text-decoration: underline; text-underline-offset: 4px; }
+.foot .public-share [role="status"] { font-size: 12px; color: #eeefed; }
+.foot .public-share [role="status"]:empty { display: none; }
+.foot .public-share input { min-width: 0; max-width: 100%; padding: 6px 8px; font-size: 16px; }
+.work-entry { min-height: 48vh; }
+.work-entry h1 { color: var(--ink); font-size: clamp(32px,5vw,58px); }
+.work-entry p { margin-block: 12px 24px; }

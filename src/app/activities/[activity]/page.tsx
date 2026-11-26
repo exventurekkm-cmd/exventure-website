@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/share-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { companyPrograms } from "@/lib/company-profile";
@@ -15,7 +16,7 @@ export const dynamicParams = false;
 export function generateStaticParams() { return publicActivities.map(a => ({activity:a.slug})); }
 export async function generateMetadata(props: Props) {
   const a = await readActivity(props);
-  return { title:a.title, description:a.date + " · " + a.organization };
+  return pageMetadata(a.title, a.date + " · " + a.organization, "/activities/" + a.slug);
 }
 export default async function ActivityPage(props: Props) {
   const a = await readActivity(props);

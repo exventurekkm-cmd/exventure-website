@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ActivitySwitch, PageHeading } from "@/components/explore-parts";
-export const metadata = { title: "소식" };
+import { pageMetadata } from "@/lib/share-metadata";
+export const metadata = pageMetadata("소식", "엑스벤처의 새로운 소식을 확인하세요.", "/news");
 export default function NewsPage() {
   return <main id="main" tabIndex={-1}><PageHeading title="활동·소식" />
     <div className="wrap content-space archive"><ActivitySwitch news />
