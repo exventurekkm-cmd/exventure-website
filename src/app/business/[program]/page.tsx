@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/share-metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { companyPrograms } from "@/lib/company-profile";
@@ -15,7 +16,7 @@ export const dynamicParams = false;
 export function generateStaticParams() { return companyPrograms.map(p => ({program: p.slug})); }
 export async function generateMetadata(props: Props) {
   const p = await readProgram(props);
-  return { title: p.label, description: p.description };
+  return pageMetadata(p.label, p.description, "/business/" + p.slug);
 }
 export default async function ProgramPage(props: Props) {
   const p = await readProgram(props);

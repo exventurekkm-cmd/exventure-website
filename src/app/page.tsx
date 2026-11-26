@@ -7,6 +7,12 @@ import { ActivityRows } from "@/components/explore-parts";
 import { ExplorePhoto } from "@/components/explore-photo";
 import { ExploreTabs } from "@/components/explore-tabs";
 
+import { pageMetadata } from "@/lib/share-metadata";
+export const metadata = {
+  ...pageMetadata("창업·사업화 프로그램", "엑스벤처의 창업 교육과 팀빌딩, 제품·시장 검증, 해외 진출 프로그램을 살펴보세요.", "/", "home"),
+  title: { absolute: "엑스벤처 | 창업·사업화 프로그램" },
+};
+
 export default function Home() {
   return <main id="main" tabIndex={-1}>
     <section className="explore-cover" id="programs"><div className="wrap">
