@@ -7,7 +7,8 @@ import { pageMetadata, shortOrigin } from "../src/lib/share-metadata.ts";
 const destinations = {
   work: "https://workspace.exventure.co.kr/",
   roadmap: "https://workspace.exventure.co.kr/roadmap",
-  research: "https://workspace.exventure.co.kr/workspace",
+  research: "https://workspace.exventure.co.kr/research",
+  respond: "https://workspace.exventure.co.kr/respond",
   consulting: "https://workspace.exventure.co.kr/consulting",
   mentoring: "https://workspace.exventure.co.kr/mentoring",
   assignments: "https://workspace.exventure.co.kr/assignments",

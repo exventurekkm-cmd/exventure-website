@@ -12,7 +12,9 @@ const { staffLoginUrl } = await import(websiteLogin.href);
 // accidentally disappears from the staff navigation.
 const destinations = new Set([
   "/", "/roadmap", "/workspace", "/research", "/companies", "/mentoring", "/consulting",
-  "/roadmap/quarters?year=2026", "/mentoring/new",
+  "/research/projects/91000000-0000-4000-8000-000000000001?year=2026",
+  "/research/surveys/91000000-0000-4000-8000-000000000002/report?historyPage=2",
+  "/research?q=%EC%A1%B0%EC%82%AC", "/roadmap/quarters?year=2026", "/mentoring/new",
   "/assignments", "/assignments/manage?member=91000000-0000-4000-8000-000000000001",
   "/assignments/results/91000000-0000-4000-8000-000000000002",
 ]);

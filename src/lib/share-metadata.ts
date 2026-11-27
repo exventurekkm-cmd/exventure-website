@@ -10,7 +10,7 @@ export function pageMetadata(title: string, description: string, url: string, ar
   const canonical = new URL(url, websiteOrigin).href;
   const displayTitle = title + " | 엑스벤처";
   const image = {
-    url: websiteOrigin + "/brand/share-" + artwork + ".jpg",
+    url: websiteOrigin + "/brand/share-" + (artwork === "respond" ? "research" : artwork) + ".jpg",
     width: 1200,
     height: 630,
     alt: artwork === "company" ? "엑스벤처 공식 홈페이지" : title + " · 엑스벤처",
