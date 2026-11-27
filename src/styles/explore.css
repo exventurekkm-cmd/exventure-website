@@ -117,7 +117,6 @@ button:disabled { color: #68747e; background: var(--paper); border-color: var(--
 .field-offers .action { margin-top: 12px; }
 .field-media, .program-media { background: #283139; position: relative; min-width: 0; overflow: hidden; }
 .field-media img, .program-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.field-media .illustration, .program-media .illustration { object-fit: contain; background: #171c21; }
 @keyframes present { from { opacity: .72; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .field-panel[data-enter], .tool-panel[data-enter] { animation: present .23s var(--ease); }
 .light-band { background: var(--paper); }
@@ -206,6 +205,10 @@ input::placeholder { color: #65717a; }
 .calendar small { margin-left: 6px; font-size: 19px; font-weight: 500; color: #d6dde2; }
 .record-heading h1 { max-width: 900px; font-size: clamp(32px, 3.6vw, 55px); }
 .record-heading > p { margin-top: 15px; color: #cbd4d9; }
+.activity-gallery { border-bottom: 1px solid var(--line); }
+.activity-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); margin-top: 24px; }
+.activity-photos img { width: 100%; height: auto; border-radius: var(--radius); }
+.activity-photos figcaption { margin-top: 8px; color: var(--muted); font-size: 15px; }
 .related-offer .secondary { margin-top: 18px; }
 .reading-list a { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding: 17px 0; }
 .facts { border-top: 1px solid #97a3ab; }
@@ -282,7 +285,7 @@ form > .action { margin-top: 25px; }
   .home-band .side-caption { display: flex; justify-content: space-between; align-items: center; gap: 14px; }
   .side-caption .quiet-link { margin-top: 0; }
   .field-panel { min-height: 0; display: flex; flex-direction: column; }
-  .field-media { order: -1; height: clamp(155px, 38vw, 245px); }
+  .field-media { order: -1; aspect-ratio: 16 / 9; }
   .field-offers { padding: 21px 24px 25px; }
   .field-offers .title-link { min-height: 38px; }
   .field-offers article { padding: 12px 0; }
@@ -303,6 +306,7 @@ form > .action { margin-top: 25px; }
   .progress-block { max-width: 320px; margin-top: 15px; }
   .worksheet .tab-strip { margin-bottom: 24px; }
   .record-spread { grid-template-columns: 1fr; gap: 15px; }
+  .activity-photos { grid-template-columns: 1fr; gap: 24px; }
   .calendar { display: flex; align-items: baseline; gap: 5px; border: 0; }
   .calendar strong, .calendar small, .calendar > span { font-size: 16px; line-height: 1.6; letter-spacing: 0; }
   .calendar small { margin: 0; }

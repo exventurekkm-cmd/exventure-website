@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { companyProfile as company, companyPrograms } from "@/lib/company-profile";
 import { fields, programHref } from "@/lib/explore";
+import { programPhotos } from "@/lib/field-photos";
 import { Breadcrumb, PageHeading } from "./explore-parts";
 import { ExplorePhoto } from "./explore-photo";
 import { RecordDirectory } from "./company-history-directory";
@@ -11,7 +12,7 @@ export function CompanyOverview() {
       <div className="program-spread about-spread"><div className="program-lead"><h1>회사 소개</h1>
         <p className="about-statement">창업 교육과 컨설팅,<br />사업화와 시장 검증을 함께합니다.</p>
         <p className="intro">엑스벤처는 초기 창업기업에 필요한 교육·멘토링과 기업·기관의 창업지원 프로그램을 기획하고 운영합니다.</p>
-      </div><figure className="program-media"><ExplorePhoto photo="planning" priority /></figure></div>
+      </div><figure className="program-media"><ExplorePhoto photo={programPhotos.planning} priority /></figure></div>
     </div></header>
     <section className="wrap detail-band"><h2>회사 정보</h2><dl className="facts">
       {[["법인명",company.name],["대표자",company.representative],["설립일",company.established],["사업자등록번호",company.businessNumber],["주소",company.address]].map(([k,v]) =>
