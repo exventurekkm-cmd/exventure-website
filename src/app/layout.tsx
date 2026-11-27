@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PublicShare } from "@/components/public-share";
 import { SiteHeader, SkipLink } from "@/components/site-header";
 import { AccountLink, EmployeeSession } from "@/components/employee-account";
 import { Brand } from "@/components/brand";
@@ -21,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <footer className="foot"><div className="wrap foot-row">
       <div><Link className="wordmark" href="/" aria-label="엑스벤처 홈"><Brand tone="dark" /></Link><p>{company.name}</p></div>
       <address><a href={"mailto:" + company.email}>{company.email}</a><a href={company.telephoneHref}>{company.telephone}</a></address>
-      <nav aria-label="하단 메뉴"><Link href="/about#company-history">연혁</Link><Link href="/privacy">문의 개인정보 안내</Link><AccountLink /><PublicShare /></nav>
+      <nav aria-label="하단 메뉴"><Link href="/about#company-history">연혁</Link><Link href="/privacy">문의 개인정보 안내</Link><AccountLink /></nav>
     </div></footer>
   </EmployeeSession></body></html>;
 }
