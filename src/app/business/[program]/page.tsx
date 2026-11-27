@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { companyPrograms } from "@/lib/company-profile";
 import { fields, inquiryHref } from "@/lib/explore";
+import { programPhotos } from "@/lib/field-photos";
 import { publicActivities } from "@/lib/public-activities";
 import { ActivityRows, Breadcrumb } from "@/components/explore-parts";
 import { ExplorePhoto } from "@/components/explore-photo";
@@ -29,7 +30,7 @@ export default async function ProgramPage(props: Props) {
         <p className="program-meta">{field.label}{p.label !== p.name && <span>{p.name}</span>}</p>
         <h1>{p.label}</h1><p className="intro">{p.description}</p>
         <Link className="action" href={inquiryHref(p.slug)}>이 프로그램 문의</Link>
-      </div><figure className="program-media"><ExplorePhoto photo={p.photo} priority /></figure></div>
+      </div><figure className="program-media"><ExplorePhoto photo={programPhotos[p.photo]} priority /></figure></div>
     </div></header>
     <section className="wrap detail-band"><h2>지원 내용</h2><ul className="support-list">{p.items.map(line => <li key={line}>{line}</li>)}</ul></section>
     {!!related.length && <section className="light-band"><div className="wrap detail-band"><h2>관련 활동</h2><ActivityRows records={related} /></div></section>}

@@ -3,9 +3,9 @@ import type { InquiryKind } from "./inquiries/contract";
 import type { InquiryTopic } from "./public-tools";
 
 export const fields = [
-  { id: "education", label: "교육·팀빌딩", photo: "workshop" },
-  { id: "product", label: "제품·시장 검증", photo: "planning" },
-  { id: "global", label: "해외 진출", photo: "global" },
+  { id: "education", label: "교육·팀빌딩" },
+  { id: "product", label: "제품·시장 검증" },
+  { id: "global", label: "해외 진출" },
 ] as const;
 export type Program = typeof companyPrograms[number];
 export const programHref = (p: Program) => "/business/" + p.slug;

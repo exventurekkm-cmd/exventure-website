@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { companyPrograms } from "@/lib/company-profile";
 import { fields, inquiryHref, programHref } from "@/lib/explore";
+import { homePhotos } from "@/lib/field-photos";
 import { publicActivities } from "@/lib/public-activities";
 import { startupTools } from "@/lib/public-tools";
 import { ActivityRows } from "@/components/explore-parts";
@@ -23,7 +24,10 @@ export default function Home() {
             <article key={p.slug}><h2><Link className="title-link" href={programHref(p)}>{p.label}{p.name !== p.label && <span className="code">{p.name}</span>}</Link></h2>
               <ul>{p.items.map(item => <li key={item}>{item}</li>)}</ul></article>
           )}<Link className="action" href={inquiryHref("field-" + field.id)}>이 분야 문의</Link></div>
-          <div className="field-media"><ExplorePhoto photo={field.photo} priority={index === 0} /></div>
+          <div className="field-media">
+            {/* A 16:9 photo covers at least 462px of panel height on desktop. */}
+            <ExplorePhoto photo={homePhotos[field.id]} priority={index === 0} sizes="(max-width: 760px) 92vw, 840px" />
+          </div>
         </>,
       }))} />
       <noscript><p><Link className="button-light" href="/business">전체 프로그램 안내</Link></p></noscript>
