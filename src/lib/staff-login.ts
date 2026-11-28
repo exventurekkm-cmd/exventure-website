@@ -10,7 +10,7 @@ export function staffReturnPath(value: unknown): string {
       || /%(?![0-9a-f]{2})|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(value) || fields.some(field => field.includes("%") && !field.startsWith("q="))) return "/";
   }
   if (value === "/consulting" || value === "/consulting/") return "/consulting";
-  const allowed = /^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|assignments(?:\/|\?|$)|companies(?:\/|\?|$)|mentoring(?:\/|\?|$)|buyer-bridge(?:\/|\?|$)|research(?:\/|\?|$))/;
+  const allowed = /^\/(?:$|roadmap(?:\/|\?|$)|workspace(?:\/|\?|$)|assignments(?:\/|\?|$)|companies(?:\/|\?|$)|mentoring(?:\/|\?|$)|modoo(?:\/|\?|$)|buyer-bridge(?:\/|\?|$)|research(?:\/|\?|$))/;
   if (!allowed.test(value)) return "/";
   const url = new URL(value, "https://workspace.exventure.co.kr");
   if (!allowed.test(url.pathname) || /\/(?:auth|login|oauth|accounts|account)(?:\/|$)/.test(url.pathname)) return "/";

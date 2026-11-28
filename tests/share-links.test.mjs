@@ -10,6 +10,7 @@ const destinations = {
   research: "https://workspace.exventure.co.kr/research",
   respond: "https://workspace.exventure.co.kr/respond",
   consulting: "https://workspace.exventure.co.kr/consulting",
+  modoo: "https://workspace.exventure.co.kr/modoo",
   mentoring: "https://workspace.exventure.co.kr/mentoring",
   assignments: "https://workspace.exventure.co.kr/assignments",
   companies: "https://workspace.exventure.co.kr/companies",
